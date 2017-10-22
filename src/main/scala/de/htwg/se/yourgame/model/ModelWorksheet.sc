@@ -1,18 +1,18 @@
 import de.htwg.se.yourgame.model.Player
 
-case class Cell(x:Int, y:Int)
+case class Cell(x: Int, y: Int)
 
-val cell1 = Cell(8,5)
+val cell1 = Cell(8, 5)
 cell1.x
 cell1.y
 
-Player("Peter").name
+Player("Ich").name
 
-println("hallo")
+println("Hallo Welt!")
 
 case class Field(cells: Array[Cell])
 
 val field1 = Field(Array.ofDim[Cell](1))
-field1.cells(0)=cell1
+field1.cells(0) = cell1
 field1.cells(0).x
 field1.cells(0).y
