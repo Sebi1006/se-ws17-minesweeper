@@ -10,12 +10,16 @@ class Tui(controller: Controller) extends Observer {
   val length = 8
   val width = 8
   val mineNumber = 8
-  val randomCells: Int = length * width / 4
 
   def processInputLine(input: String): Unit = {
     input match {
       case "r" => controller.createRandomGrid(length, width, mineNumber)
-      case _ =>
+      case _ => input.toList.filter(c => c != ' ').map(c => c.toString.toInt) match {
+        case row :: col :: Nil => {
+          controller.setChecked(row - 1, col - 1)
+        }
+        case _ =>
+      }
     }
 
   }

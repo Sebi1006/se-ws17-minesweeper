@@ -8,7 +8,7 @@ import scala.io.StdIn.readLine
 
 object MineSweeper {
   val controller = new Controller(new Grid(8, 8))
-  controller.createRandomGrid(8, 8, 1)
+  controller.createRandomGrid(8, 8, 5)
   val tui = new Tui(controller)
   controller.notifyObservers
 

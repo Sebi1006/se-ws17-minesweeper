@@ -3,7 +3,7 @@ package de.htwg.se.minesweeper.model
 import scala.util.Random
 
 case class Matrix(rows: Vector[Vector[Cell]]) {
-  def this(length: Int, width: Int, fill: Cell) = this(Vector.tabulate(length, width) { (row, col) => fill })
+  def this(length: Int, width: Int) = this(Vector.tabulate(length, width) { (row, col) => new Cell(false, 0) })
 
   val size: Int = rows.size
 
