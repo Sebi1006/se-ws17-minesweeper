@@ -3,9 +3,11 @@ package de.htwg.se.minesweeper.controller
 import de.htwg.se.minesweeper.model.Grid
 
 class Controller(var grid: Grid) {
+
   var flag: Boolean = true
-  def createGrid(length: Int, width: Int, numMines: Int): Unit = {
-    grid = new Grid(length, width, numMines)
+
+  def createGrid(height: Int, width: Int, numMines: Int): Unit = {
+    grid = new Grid(height, width, numMines)
     println(grid.toString)
   }
 
@@ -14,7 +16,7 @@ class Controller(var grid: Grid) {
       return false
     }
     grid.cell(row, col).setChecked(true)
-    if(flag) {
+    if (flag) {
       grid.setMines(row, col)
       grid.setValues()
       flag = false
@@ -49,4 +51,5 @@ class Controller(var grid: Grid) {
   def width(): Int = {
     grid.width
   }
+
 }

@@ -12,11 +12,11 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   var fwidth: Int = _
   var fheight: Int = _
+  var savedHeight: Int = _
+  var savedWidth: Int = _
+  var savedNumMines: Int = _
   var numberOfMine: Int = 10
   var detectedMine: Int = 0
-  var savedBlockRowNum: Int = 10
-  var savedBlockColumnNum: Int = 10
-  var savedNumberOfMine: Int = 10
   var ic: Array[ImageIcon] = new Array[ImageIcon](14)
   var blocks: Array[Array[JButton]] = _
   var panelBlock: JPanel = new JPanel()
@@ -35,10 +35,10 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
   var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
 
   setMenu()
-  setLocation(400, 300)
+  setLocation(600, 300)
   setIc()
-  controller.createGrid(10,10,10)
-  setPanel()
+  controller.createGrid(10, 10, 10)
+  setPanel(1)
 
   def setMenu(): Unit = {
     val bar: JMenuBar = new JMenuBar()
@@ -52,21 +52,20 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     val status: ButtonGroup = new ButtonGroup()
     menuitem.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        controller.createGrid(10,10,10)
-        setPanel()
-        fwidth = 200
-        fheight = 300
+        controller.createGrid(10, 10, 10)
+        setPanel(1)
       }
     })
     beginner.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
         panelBlock.removeAll()
         reset()
-        controller.createGrid(10,10,10)
-        setPanel()
-        fwidth = 200
-        fheight = 300
+        controller.createGrid(10, 10, 10)
+        setPanel(1)
         lastgame = 1
+        savedHeight = 10
+        savedWidth = 10
+        savedNumMines = 10
         panelBlock.revalidate()
         panelBlock.repaint()
         beginner.setSelected(true)
@@ -76,11 +75,12 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       def actionPerformed(e: ActionEvent): Unit = {
         panelBlock.removeAll()
         reset()
-        controller.createGrid(16,16,70)
-        setPanel()
-        fwidth = 320
-        fheight = 416
+        controller.createGrid(16, 16, 70)
+        setPanel(2)
         lastgame = 2
+        savedHeight = 16
+        savedWidth = 16
+        savedNumMines = 70
         panelBlock.revalidate()
         panelBlock.repaint()
         intermediate.setSelected(true)
@@ -90,11 +90,12 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       def actionPerformed(e: ActionEvent): Unit = {
         panelBlock.removeAll()
         reset()
-        controller.createGrid(20,20,150)
-        setPanel()
-        fwidth = 400
-        fheight = 520
+        controller.createGrid(20, 20, 150)
+        setPanel(3)
         lastgame = 3
+        savedHeight = 20
+        savedWidth = 20
+        savedNumMines = 150
         panelBlock.revalidate()
         panelBlock.repaint()
         expert.setSelected(true)
@@ -104,11 +105,13 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       def actionPerformed(e: ActionEvent): Unit = {
         panelBlock.removeAll()
         reset()
-        controller.createGrid(15,15,60)
-        setPanel()
-        fwidth = (20 * 15)
-        fheight = (24 * 15)
-        lastgame = 1
+        var c: Custom = new Custom()
+        controller.createGrid(15, 15, 60)
+        setPanel(4)
+        lastgame = 4
+        savedHeight = 15
+        savedWidth = 15
+        savedNumMines = 60
         panelBlock.revalidate()
         panelBlock.repaint()
         expert.setSelected(true)
@@ -135,7 +138,20 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     bar.add(game)
   }
 
-  def setPanel(): Unit = {
+  def setPanel(difficulty: Int): Unit = {
+    if (difficulty == 1) {
+      fwidth = 200
+      fheight = 300
+    } else if (difficulty == 2) {
+      fwidth = 320
+      fheight = 416
+    } else if (difficulty == 3) {
+      fwidth = 400
+      fheight = 520
+    } else if (difficulty == 4) {
+      fwidth = (20 * 1)
+      fheight = (24 * 1)
+    }
     setSize(fwidth, fheight)
     setResizable(false)
     detectedMine = numberOfMine
@@ -191,12 +207,12 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     def actionPerformed(ae: ActionEvent): Unit = {
       try {
         sw.stop()
-        controller.createGrid(10,10,10)
-        setPanel()
+        controller.createGrid(savedHeight, savedWidth, savedNumMines)
+        setPanel(lastgame)
       } catch {
         case ex: Exception =>
-          controller.createGrid(10,10,10)
-          setPanel()
+          controller.createGrid(savedHeight, savedWidth, savedNumMines)
+          setPanel(lastgame)
       }
       reset()
     }
@@ -370,6 +386,61 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       isRunning = true
       updater = new Thread(this)
       updater.start()
+    }
+
+  }
+
+  class Custom() extends JFrame("Custom Field") with ActionListener {
+
+    var tf1: JTextField = new JTextField()
+    var tf2: JTextField = new JTextField()
+    var tf3: JTextField = new JTextField()
+    var l1: JLabel = new JLabel("Height")
+    var l2: JLabel = new JLabel("Width")
+    var l3: JLabel = new JLabel("Mines")
+    var b1: JButton = new JButton("OK")
+    var b2: JButton = new JButton("Cancel")
+    var i1: Int = _
+    var i2: Int = _
+    var i3: Int = _
+
+    setSize(180, 200)
+    setResizable(false)
+    setLocation(600, 300)
+    p = this.getLocation
+    b1.addActionListener(this)
+    b2.addActionListener(this)
+    getContentPane.setLayout(new GridLayout(0, 2))
+    getContentPane.add(l1)
+    getContentPane.add(tf1)
+    getContentPane.add(l2)
+    getContentPane.add(tf2)
+    getContentPane.add(l3)
+    getContentPane.add(tf3)
+    getContentPane.add(b1)
+    getContentPane.add(b2)
+    setVisible(true)
+
+    def actionPerformed(e: ActionEvent): Unit = {
+      if (e.getSource == b1) {
+        try {
+          i1 = java.lang.Integer.parseInt(tf1.getText)
+          i2 = java.lang.Integer.parseInt(tf2.getText)
+          i3 = java.lang.Integer.parseInt(tf3.getText)
+          setPanel(4)
+          dispose()
+        } catch {
+          case ex: Exception => {
+            JOptionPane.showMessageDialog(this, "Integer!")
+            tf1.setText("")
+            tf2.setText("")
+            tf3.setText("")
+          }
+        }
+      }
+      if (e.getSource == b2) {
+        dispose()
+      }
     }
 
   }

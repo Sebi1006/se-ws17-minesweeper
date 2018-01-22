@@ -2,10 +2,9 @@ package de.htwg.se.minesweeper.model
 
 import scala.util.Random
 
+case class Grid(height: Int, width: Int, numMines: Int) {
 
-case class Grid(height: Int, width: Int, numMines: Int){
-  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w')}
-
+  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w') }
 
   def cell(row: Int, col: Int): Cell = {
     matrix(row)(col)
@@ -57,16 +56,16 @@ case class Grid(height: Int, width: Int, numMines: Int){
 
   override def toString: String = {
     val lineseparator = ("+-" + ("--" * width)) + "+\n"
-    val line = ("| " + ("y " * width)) +"|\n"
+    val line = ("| " + ("y " * width)) + "|\n"
     var box = "\n" + (lineseparator + (line * height)) + lineseparator
     var turn = 0
     for {
       row <- 0 until height
       col <- 0 until width
-    } if(!cell(row, col).checked) {
+    } if (!cell(row, col).checked) {
       box = box.replaceFirst("y", "x")
     } else {
-      if(cell(row,col).getValue() == -1) {
+      if (cell(row,col).getValue() == -1) {
         box = box.replaceFirst("y", "b")
       } else {
         box = box.replaceFirst("y", cell(row, col).getValue().toString)
@@ -74,4 +73,5 @@ case class Grid(height: Int, width: Int, numMines: Int){
     }
     box
   }
+
 }

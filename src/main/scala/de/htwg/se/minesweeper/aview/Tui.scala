@@ -3,12 +3,13 @@ package de.htwg.se.minesweeper.aview
 import de.htwg.se.minesweeper.controller.Controller
 
 class Tui(controller: Controller) {
+
   println("Type h for help")
   var lastgame: Int = 1
   var status: Int = 0
   var noMineNumber: Int = 0
-  def processInputLine(input: String): Unit = {
 
+  def processInputLine(input: String): Unit = {
     input match {
       case "h" => {
         println("Type 1 for Beginner")
@@ -48,27 +49,27 @@ class Tui(controller: Controller) {
       case "new" => {
         lastgame match {
           case 1 => {
-            createGrid(10,10,10)
+            createGrid(10, 10, 10)
             status = 0
             noMineNumber = 90
           }
           case 2 => {
-            createGrid(16,16,70)
+            createGrid(16, 16, 70)
             status = 0
             noMineNumber = 186
           }
           case 3 => {
-            createGrid(20,20,150)
+            createGrid(20, 20, 150)
             status = 0
             noMineNumber = 250
           }
           case 4 => {
-            createGrid(15,15,60)
+            createGrid(2, 2, 2)
             status = 0
-            noMineNumber = 165
+            noMineNumber = 2
           }
           case _  => {
-            createGrid(10,10,10)
+            createGrid(10, 10, 10)
             status = 0
             noMineNumber = 90
           }
@@ -76,7 +77,7 @@ class Tui(controller: Controller) {
         controller.createGrid(10, 10, 10)
       }
       case _ => {
-        if(status == 0) {
+        if (status == 0) {
           val vec = input.split(' ')
           if (vec.length != 2) {
             println("Wrong number of arguments")
@@ -84,17 +85,17 @@ class Tui(controller: Controller) {
             var row = vec(0).toString.toInt
             var col = vec(1).toString.toInt
             var flag = controller.setChecked(row - 1, col - 1)
-            if (controller.getMine(row -1, col - 1)) {
+            if (controller.getMine(row - 1, col - 1)) {
               status = 2
             } else if (flag) {
               noMineNumber -= 1
-              if(noMineNumber == 0) {
+              if (noMineNumber == 0) {
                 status = 1
               }
             }
           }
         }
-        if(status == 1) {
+        if (status == 1) {
           println("Hurray! You win!")
         } else if (status == 2) {
           println("Game Over!")
@@ -106,4 +107,5 @@ class Tui(controller: Controller) {
   def createGrid(height: Int, width:Int, numMines: Int): Unit = {
     controller.createGrid(height, width, numMines)
   }
+
 }

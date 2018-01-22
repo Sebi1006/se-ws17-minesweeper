@@ -1,6 +1,7 @@
 package de.htwg.se.minesweeper.model
 
 case class Cell(var checked: Boolean, var value: Int, var color: Int) {
+
   def setValue(value: Int): Unit = {
     this.value = value
   }
@@ -18,4 +19,5 @@ case class Cell(var checked: Boolean, var value: Int, var color: Int) {
   }
 
   def getColor(): Int = color
+
 }
