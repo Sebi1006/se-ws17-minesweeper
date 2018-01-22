@@ -6,24 +6,17 @@ import javax.swing._
 import java.awt.event._
 import java.util._
 
-class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
+import de.htwg.se.minesweeper.controller.Controller
+
+class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
 
   var fwidth: Int = _
   var fheight: Int = _
-  var blockRowNum: Int = _
-  var blockColumnNum: Int = _
-  var var1: Int = _
-  var var2: Int = _
-  var numberOfMine: Int = _
+  var numberOfMine: Int = 10
   var detectedMine: Int = 0
-  var savedLevel: Int = 1
-  var savedBlockRowNum: Int = _
-  var savedBlockColumnNum: Int = _
+  var savedBlockRowNum: Int = 10
+  var savedBlockColumnNum: Int = 10
   var savedNumberOfMine: Int = 10
-  var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
-  var column: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
-  var countMine: Array[Array[Int]] = _
-  var color: Array[Array[Int]] = _
   var ic: Array[ImageIcon] = new Array[ImageIcon](14)
   var blocks: Array[Array[JButton]] = _
   var panelBlock: JPanel = new JPanel()
@@ -31,82 +24,123 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
   var tf_mine: JTextField = _
   var tf_time: JTextField = _
   var resetButton: JButton = new JButton("")
-  var randomRow: Random = new Random()
-  var randomColumn: Random = new Random()
-  var check: Boolean = true
   var startTimeBool: Boolean = false
   var sw: StopWatch = new StopWatch()
   var mh: MouseHandler = _
   var p: Point = _
+  var lastgame: Int = 1
+  var var1: Int = _
+  var var2: Int = _
+  var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
+  var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
 
   setMenu()
   setLocation(400, 300)
   setIc()
-  setPanel(1, 0, 0, 0)
+  controller.createGrid(10,10,10)
+  setPanel()
 
-  resetButton.addActionListener(new ActionListener() {
-    def actionPerformed(ae: ActionEvent): Unit = {
-      try {
-        sw.stop()
-        setPanel(savedLevel,
-          savedBlockRowNum,
-          savedBlockColumnNum,
-          savedNumberOfMine)
-      } catch {
-        case ex: Exception =>
-          setPanel(savedLevel,
-            savedBlockRowNum,
-            savedBlockColumnNum,
-            savedNumberOfMine)
+  def setMenu(): Unit = {
+    val bar: JMenuBar = new JMenuBar()
+    val game: JMenu = new JMenu("Game")
+    val menuitem: JMenuItem = new JMenuItem("New Game")
+    val beginner: JCheckBoxMenuItem = new JCheckBoxMenuItem("Beginner")
+    val intermediate: JCheckBoxMenuItem = new JCheckBoxMenuItem("Intermediate")
+    val expert: JCheckBoxMenuItem = new JCheckBoxMenuItem("Expert")
+    val custom: JCheckBoxMenuItem = new JCheckBoxMenuItem("Custom...")
+    val exit: JMenuItem = new JMenuItem("Exit")
+    val status: ButtonGroup = new ButtonGroup()
+    menuitem.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        controller.createGrid(10,10,10)
+        setPanel()
+        fwidth = 200
+        fheight = 300
       }
-      reset()
-    }
-  })
-
-  def reset(): Unit = {
-    check = true
-    startTimeBool = false
-    for (i <- 0 until blockRowNum; j <- 0 until blockColumnNum) {
-      color(i)(j) = 'w'
-    }
+    })
+    beginner.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        panelBlock.removeAll()
+        reset()
+        controller.createGrid(10,10,10)
+        setPanel()
+        fwidth = 200
+        fheight = 300
+        lastgame = 1
+        panelBlock.revalidate()
+        panelBlock.repaint()
+        beginner.setSelected(true)
+      }
+    })
+    intermediate.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        panelBlock.removeAll()
+        reset()
+        controller.createGrid(16,16,70)
+        setPanel()
+        fwidth = 320
+        fheight = 416
+        lastgame = 2
+        panelBlock.revalidate()
+        panelBlock.repaint()
+        intermediate.setSelected(true)
+      }
+    })
+    expert.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        panelBlock.removeAll()
+        reset()
+        controller.createGrid(20,20,150)
+        setPanel()
+        fwidth = 400
+        fheight = 520
+        lastgame = 3
+        panelBlock.revalidate()
+        panelBlock.repaint()
+        expert.setSelected(true)
+      }
+    })
+    custom.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        panelBlock.removeAll()
+        reset()
+        controller.createGrid(15,15,60)
+        setPanel()
+        fwidth = (20 * 15)
+        fheight = (24 * 15)
+        lastgame = 1
+        panelBlock.revalidate()
+        panelBlock.repaint()
+        expert.setSelected(true)
+      }
+    })
+    exit.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        System.exit(0)
+      }
+    })
+    setJMenuBar(bar)
+    status.add(beginner)
+    status.add(intermediate)
+    status.add(expert)
+    status.add(custom)
+    game.add(menuitem)
+    game.addSeparator()
+    game.add(beginner)
+    game.add(intermediate)
+    game.add(expert)
+    game.add(custom)
+    game.addSeparator()
+    game.add(exit)
+    bar.add(game)
   }
 
-  def setPanel(level: Int, setr: Int, setc: Int, setm: Int): Unit = {
-    if (level == 1) {
-      fwidth = 200
-      fheight = 300
-      blockRowNum = 10
-      blockColumnNum = 10
-      numberOfMine = 10
-    } else if (level == 2) {
-      fwidth = 320
-      fheight = 416
-      blockRowNum = 16
-      blockColumnNum = 16
-      numberOfMine = 70
-    } else if (level == 3) {
-      fwidth = 400
-      fheight = 520
-      blockRowNum = 20
-      blockColumnNum = 20
-      numberOfMine = 150
-    } else if (level == 4) {
-      fwidth = (20 * setc)
-      fheight = (24 * setr)
-      blockRowNum = setr
-      blockColumnNum = setc
-      numberOfMine = setm
-    }
-    savedBlockRowNum = blockRowNum
-    savedBlockColumnNum = blockColumnNum
-    savedNumberOfMine = numberOfMine
+  def setPanel(): Unit = {
     setSize(fwidth, fheight)
     setResizable(false)
     detectedMine = numberOfMine
     p = this.getLocation
-    blocks = Array.ofDim[JButton](blockRowNum, blockColumnNum)
-    countMine = Array.ofDim[Int](blockRowNum, blockColumnNum)
-    color = Array.ofDim[Int](blockRowNum, blockColumnNum)
+    blocks = Array.ofDim[JButton](controller.height(), controller.width())
     mh = new MouseHandler()
     getContentPane.removeAll()
     panelBlock.removeAll()
@@ -135,9 +169,9 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
         BorderFactory.createEmptyBorder(10, 10, 10, 10),
         BorderFactory.createLoweredBevelBorder()))
     panelBlock.setPreferredSize(new Dimension(fwidth, fheight))
-    panelBlock.setLayout(new GridLayout(0, blockColumnNum))
+    panelBlock.setLayout(new GridLayout(0, controller.width))
     panelBlock.addContainerListener(this)
-    for (i <- 0 until blockRowNum; j <- 0 until blockColumnNum) {
+    for (i <- 0 until controller.height; j <- 0 until controller.width) {
       blocks(i)(j) = new JButton("")
       blocks(i)(j).addMouseListener(mh)
       panelBlock.add(blocks(i)(j))
@@ -153,70 +187,26 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
     setVisible(true)
   }
 
-  def setMenu(): Unit = {
-    val bar: JMenuBar = new JMenuBar()
-    val game: JMenu = new JMenu("Game")
-    val menuitem: JMenuItem = new JMenuItem("New Game")
-    val beginner: JCheckBoxMenuItem = new JCheckBoxMenuItem("Beginner")
-    val intermediate: JCheckBoxMenuItem = new JCheckBoxMenuItem("Intermediate")
-    val expert: JCheckBoxMenuItem = new JCheckBoxMenuItem("Expert")
-    val exit: JMenuItem = new JMenuItem("Exit")
-    val status: ButtonGroup = new ButtonGroup()
-    menuitem.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        setPanel(1, 0, 0, 0)
+  resetButton.addActionListener(new ActionListener() {
+    def actionPerformed(ae: ActionEvent): Unit = {
+      try {
+        sw.stop()
+        controller.createGrid(10,10,10)
+        setPanel()
+      } catch {
+        case ex: Exception =>
+          controller.createGrid(10,10,10)
+          setPanel()
       }
-    })
-    beginner.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        panelBlock.removeAll()
-        reset()
-        setPanel(1, 0, 0, 0)
-        panelBlock.revalidate()
-        panelBlock.repaint()
-        beginner.setSelected(true)
-        savedLevel = 1
-      }
-    })
-    intermediate.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        panelBlock.removeAll()
-        reset()
-        setPanel(2, 0, 0, 0)
-        panelBlock.revalidate()
-        panelBlock.repaint()
-        intermediate.setSelected(true)
-        savedLevel = 2
-      }
-    })
-    expert.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        panelBlock.removeAll()
-        reset()
-        setPanel(3, 0, 0, 0)
-        panelBlock.revalidate()
-        panelBlock.repaint()
-        expert.setSelected(true)
-        savedLevel = 3
-      }
-    })
-    exit.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        System.exit(0)
-      }
-    })
-    setJMenuBar(bar)
-    status.add(beginner)
-    status.add(intermediate)
-    status.add(expert)
-    game.add(menuitem)
-    game.addSeparator()
-    game.add(beginner)
-    game.add(intermediate)
-    game.add(expert)
-    game.addSeparator()
-    game.add(exit)
-    bar.add(game)
+      reset()
+    }
+  })
+
+  def reset(): Unit = {
+    startTimeBool = false
+    for (i <- 0 until controller.height; j <- 0 until controller.width) {
+      controller.setColor(i, j, 'w')
+    }
   }
 
   def componentAdded(ce: ContainerEvent): Unit = {}
@@ -226,16 +216,12 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
   class MouseHandler extends MouseAdapter {
 
     override def mouseClicked(me: MouseEvent): Unit = {
-      if (check == true) {
-        for (i <- 0 until blockRowNum; j <- 0 until blockColumnNum
-             if me.getSource == blocks(i)(j)) {
-          var1 = i
-          var2 = j
-        }
-        setMine()
-        calculation()
-        check = false
+      for (i <- 0 until controller.height; j <- 0 until controller.width
+           if me.getSource == blocks(i)(j)) {
+        var1 = i
+        var2 = j
       }
+      controller.setChecked(var1, var2)
       showValue(me)
       winner()
       if (startTimeBool == false) {
@@ -248,21 +234,21 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
 
   def winner(): Unit = {
     var q: Int = 0
-    for (k <- 0 until blockRowNum; l <- 0 until blockColumnNum
-         if color(k)(l) == 'w') {
+    for (k <- 0 until controller.height; l <- 0 until controller.width
+         if controller.getColor(k, l) == 'w') {
       q = 1
     }
     if (q == 0) {
-      for (k <- 0 until blockRowNum; l <- 0 until blockColumnNum) {
+      for (k <- 0 until controller.height; l <- 0 until controller.width) {
         blocks(k)(l).removeMouseListener(mh)
       }
       sw.stop()
-      JOptionPane.showMessageDialog(this, "You win!")
+      JOptionPane.showMessageDialog(this, "Hurray! You win!")
     }
   }
 
   def showValue(e: MouseEvent): Unit = {
-    for (i <- 0 until blockRowNum; j <- 0 until blockColumnNum
+    for (i <- 0 until controller.height; j <- 0 until controller.width
          if e.getSource == blocks(i)(j)) {
       if (e.isMetaDown == false) {
         if (blocks(i)(j).getIcon == ic(10)) {
@@ -271,9 +257,9 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
           }
           tf_mine.setText("" + detectedMine)
         }
-        if (countMine(i)(j) == -1) {
-          for (k <- 0 until blockRowNum; l <- 0 until blockColumnNum) {
-            if (countMine(k)(l) == -1) {
+        if (controller.getMine(i, j)) {
+          for (k <- 0 until controller.height; l <- 0 until controller.width) {
+            if (controller.getMine(k, l)) {
               blocks(k)(l).setIcon(ic(9))
               blocks(k)(l).removeMouseListener(mh)
             }
@@ -281,12 +267,12 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
           }
           sw.stop()
           resetButton.setIcon(ic(12))
-          JOptionPane.showMessageDialog(null, "You lose!")
-        } else if (countMine(i)(j) == 0) {
+          JOptionPane.showMessageDialog(null, "Game Over!")
+        } else if (!controller.getMine(i, j)) {
           depthFirstSearch(i, j)
         } else {
-          blocks(i)(j).setIcon(ic(countMine(i)(j)))
-          color(i)(j) = 'b'
+          blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
+          controller.setColor(i, j, 'b')
         }
       } else {
         if (detectedMine != 0) {
@@ -300,74 +286,24 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
     }
   }
 
-  def calculation(): Unit = {
-    var rowC: Int = 0
-    var columnC: Int = 0
-    for (i <- 0 until blockRowNum; j <- 0 until blockColumnNum) {
-      var value: Int = 0
-      var R: Int = 0
-      var C: Int = 0
-      rowC = i
-      columnC = j
-      if (countMine(rowC)(columnC) != -1) {
-        for (k <- 0.until(8)) {
-          R = rowC + row(k)
-          C = columnC + column(k)
-          if (R >= 0 && C >= 0 && R < blockRowNum && C < blockColumnNum) {
-            if (countMine(R)(C) == -1) {
-              { value += 1; value - 1 }
-            }
-          }
-        }
-        countMine(rowC)(columnC) = value
-      }
-    }
-  }
-
   def depthFirstSearch(rowD: Int, colD: Int): Unit = {
     var R: Int = 0
     var C: Int = 0
-    color(rowD)(colD) = 'b'
+    controller.setColor(rowD, colD, 'b')
     blocks(rowD)(colD).setBackground(Color.LIGHT_GRAY)
-    blocks(rowD)(colD).setIcon(ic(countMine(rowD)(colD)))
+    blocks(rowD)(colD).setIcon(ic(controller.getValue(rowD, colD)))
     for (i <- 0.until(8)) {
       R = rowD + row(i)
-      C = colD + column(i)
-      if (R >= 0 && R < blockRowNum && C >= 0 && C < blockColumnNum &&
-        color(R)(C) == 'w') {
-        if (countMine(R)(C) == 0) {
+      C = colD + col(i)
+      if (R >= 0 && R < controller.height && C >= 0 && C < controller.width &&
+        controller.getColor(R, C) == 'w') {
+        if (controller.getValue(R, C) == 0) {
           depthFirstSearch(R, C)
         } else {
-          blocks(R)(C).setIcon(ic(countMine(R)(C)))
-          color(R)(C) = 'b'
+          blocks(R)(C).setIcon(ic(controller.getValue(R, C)))
+          controller.setColor(R, C, 'b')
         }
       }
-    }
-  }
-
-  def setMine(): Unit = {
-    var row: Int = 0
-    var col: Int = 0
-    val flag: Array[Array[Boolean]] =
-      Array.ofDim[Boolean](blockRowNum, blockColumnNum)
-    for (i <- 0 until blockRowNum; j <- 0 until blockColumnNum) {
-      flag(i)(j) = true
-      countMine(i)(j) = 0
-    }
-    flag(var1)(var2) = false
-    color(var1)(var2) = 'b'
-    var i: Int = 0
-    while (i < numberOfMine) {
-      row = randomRow.nextInt(blockRowNum)
-      col = randomColumn.nextInt(blockColumnNum)
-      if (flag(row)(col) == true) {
-        countMine(row)(col) = -1
-        color(row)(col) = 'b'
-        flag(row)(col) = false
-      } else {
-        { i -= 1; i + 1 }
-      }
-      i += 1
     }
   }
 
@@ -375,13 +311,13 @@ class Gui() extends JFrame("HTWG Minesweeper") with ActionListener with Containe
     var name: String = null
     var i: Int = 0
     while (i <= 8) {
-      name = "C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
+      name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
       ic(i) = new ImageIcon(name) { i += 1; i - 1 }
     }
-    ic(9) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
-    ic(10) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
-    ic(11) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
-    ic(12) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
+    ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
+    ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
+    ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
+    ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
   }
 
   class StopWatch extends JFrame with Runnable {
