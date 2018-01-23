@@ -4,7 +4,6 @@ import java.awt._
 import java.awt.Dimension
 import javax.swing._
 import java.awt.event._
-import java.util._
 
 import de.htwg.se.minesweeper.controller.Controller
 
@@ -12,9 +11,9 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   var fwidth: Int = _
   var fheight: Int = _
-  var savedHeight: Int = _
-  var savedWidth: Int = _
-  var savedNumMines: Int = _
+  var savedHeight: Int = 10
+  var savedWidth: Int = 10
+  var savedNumMines: Int = 10
   var numberOfMine: Int = 10
   var detectedMine: Int = 0
   var ic: Array[ImageIcon] = new Array[ImageIcon](14)
@@ -31,14 +30,12 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
   var lastgame: Int = 1
   var var1: Int = _
   var var2: Int = _
-  var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
-  var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
 
   setMenu()
   setLocation(600, 300)
   setIc()
   controller.createGrid(10, 10, 10)
-  setPanel(1)
+  setPanel(1, 0, 0)
 
   def setMenu(): Unit = {
     val bar: JMenuBar = new JMenuBar()
@@ -53,7 +50,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     menuitem.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
         controller.createGrid(10, 10, 10)
-        setPanel(1)
+        numberOfMine = 10
+        setPanel(1, 0, 0)
       }
     })
     beginner.addActionListener(new ActionListener() {
@@ -61,7 +59,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         panelBlock.removeAll()
         reset()
         controller.createGrid(10, 10, 10)
-        setPanel(1)
+        numberOfMine = 10
+        setPanel(1, 0, 0)
         lastgame = 1
         savedHeight = 10
         savedWidth = 10
@@ -76,7 +75,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         panelBlock.removeAll()
         reset()
         controller.createGrid(16, 16, 70)
-        setPanel(2)
+        numberOfMine = 70
+        setPanel(2, 0, 0)
         lastgame = 2
         savedHeight = 16
         savedWidth = 16
@@ -91,7 +91,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         panelBlock.removeAll()
         reset()
         controller.createGrid(20, 20, 150)
-        setPanel(3)
+        numberOfMine = 150
+        setPanel(3, 0, 0)
         lastgame = 3
         savedHeight = 20
         savedWidth = 20
@@ -106,15 +107,9 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         panelBlock.removeAll()
         reset()
         var c: Custom = new Custom()
-        controller.createGrid(15, 15, 60)
-        setPanel(4)
-        lastgame = 4
-        savedHeight = 15
-        savedWidth = 15
-        savedNumMines = 60
         panelBlock.revalidate()
         panelBlock.repaint()
-        expert.setSelected(true)
+        custom.setSelected(true)
       }
     })
     exit.addActionListener(new ActionListener() {
@@ -138,7 +133,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     bar.add(game)
   }
 
-  def setPanel(difficulty: Int): Unit = {
+  def setPanel(difficulty: Int, height: Int, width: Int): Unit = {
     if (difficulty == 1) {
       fwidth = 200
       fheight = 300
@@ -149,8 +144,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       fwidth = 400
       fheight = 520
     } else if (difficulty == 4) {
-      fwidth = (20 * 1)
-      fheight = (24 * 1)
+      fwidth = (20 * width)
+      fheight = (30 * height)
     }
     setSize(fwidth, fheight)
     setResizable(false)
@@ -208,11 +203,11 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       try {
         sw.stop()
         controller.createGrid(savedHeight, savedWidth, savedNumMines)
-        setPanel(lastgame)
+        setPanel(lastgame, savedHeight, savedWidth)
       } catch {
         case ex: Exception =>
           controller.createGrid(savedHeight, savedWidth, savedNumMines)
-          setPanel(lastgame)
+          setPanel(lastgame, savedHeight, savedWidth)
       }
       reset()
     }
@@ -285,7 +280,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
           resetButton.setIcon(ic(12))
           JOptionPane.showMessageDialog(null, "Game Over!")
         } else if (!controller.getMine(i, j)) {
-          depthFirstSearch(i, j)
+          controller.depthFirstSearch(i, j)
+          paint()
         } else {
           blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
           controller.setColor(i, j, 'b')
@@ -302,26 +298,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     }
   }
 
-  def depthFirstSearch(rowD: Int, colD: Int): Unit = {
-    var R: Int = 0
-    var C: Int = 0
-    controller.setColor(rowD, colD, 'b')
-    blocks(rowD)(colD).setBackground(Color.LIGHT_GRAY)
-    blocks(rowD)(colD).setIcon(ic(controller.getValue(rowD, colD)))
-    for (i <- 0.until(8)) {
-      R = rowD + row(i)
-      C = colD + col(i)
-      if (R >= 0 && R < controller.height && C >= 0 && C < controller.width &&
-        controller.getColor(R, C) == 'w') {
-        if (controller.getValue(R, C) == 0) {
-          depthFirstSearch(R, C)
-        } else {
-          blocks(R)(C).setIcon(ic(controller.getValue(R, C)))
-          controller.setColor(R, C, 'b')
-        }
-      }
-    }
-  }
+
 
   def setIc(): Unit = {
     var name: String = null
@@ -336,6 +313,17 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
   }
 
+  def paint(): Unit = {
+    for(i <- 0 until controller.height(); j <- 0 until controller.width()) {
+      println(blocks(i)(j).getBackground)
+      if (controller.getColorBack(i, j).equals(Color.LIGHT_GRAY)) {
+        blocks(i)(j).setBackground(Color.LIGHT_GRAY)
+      }
+      if(controller.getChecked(i, j)) {
+        blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
+      }
+    }
+  }
   class StopWatch extends JFrame with Runnable {
 
     var startTime: Long = _
@@ -427,7 +415,13 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
           i1 = java.lang.Integer.parseInt(tf1.getText)
           i2 = java.lang.Integer.parseInt(tf2.getText)
           i3 = java.lang.Integer.parseInt(tf3.getText)
-          setPanel(4)
+          controller.createGrid(i1, i2, i3)
+          savedHeight = i1
+          savedWidth = i2
+          savedNumMines = i3
+          numberOfMine = i3
+          lastgame = 4
+          setPanel(4, i1, i2)
           dispose()
         } catch {
           case ex: Exception => {

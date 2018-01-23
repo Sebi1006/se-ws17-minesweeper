@@ -1,10 +1,13 @@
 package de.htwg.se.minesweeper.model
 
+import java.awt.Color
+
 import scala.util.Random
 
 case class Grid(height: Int, width: Int, numMines: Int) {
-
-  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w') }
+  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w', Color.WHITE) }
+  var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
+  var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
 
   def cell(row: Int, col: Int): Cell = {
     matrix(row)(col)
@@ -29,8 +32,6 @@ case class Grid(height: Int, width: Int, numMines: Int) {
   }
 
   def setValues(): Unit = {
-    var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
-    var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
     var rowC: Int = 0
     var colC: Int = 0
     for (i <- 0 until height; j <- 0 until width) {
