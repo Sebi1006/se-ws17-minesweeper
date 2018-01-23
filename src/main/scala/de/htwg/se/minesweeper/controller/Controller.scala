@@ -2,12 +2,10 @@ package de.htwg.se.minesweeper.controller
 
 import de.htwg.se.minesweeper.model.Grid
 import java.awt._
-
-import de.htwg.se.minesweeper.util.Observable
-
 import scala.swing.{Publisher, event}
 
-class Controller(var grid: Grid) extends Publisher{
+class Controller(var grid: Grid) extends Publisher {
+
   publish(new GridSizeChanged(grid.height, grid.width, grid.numMines))
   var flag: Boolean = true
 
@@ -46,12 +44,12 @@ class Controller(var grid: Grid) extends Publisher{
     grid.cell(row, col).getValue()
   }
 
-  def getColor(row: Int, col: Int): Int = {
-    grid.cell(row, col).getColor()
-  }
-
   def setColor(row: Int, col: Int, color: Int): Unit = {
     grid.cell(row, col).setColor(color)
+  }
+
+  def getColor(row: Int, col: Int): Int = {
+    grid.cell(row, col).getColor()
   }
 
   def height(): Int = {
@@ -62,7 +60,7 @@ class Controller(var grid: Grid) extends Publisher{
     grid.width
   }
 
-  def setColorBack(row: Int, col:Int, color: Color): Unit = {
+  def setColorBack(row: Int, col: Int, color: Color): Unit = {
     grid.cell(row, col).setColorBack(color)
   }
 
@@ -94,10 +92,11 @@ class Controller(var grid: Grid) extends Publisher{
           depthFirstSearch(R, C)
         } else {
           setChecked(R, C)
-          //blocks(R)(C).setIcon(ic(getValue(R, C)))
+          // blocks(R)(C).setIcon(ic(getValue(R, C)))
           setColor(R, C, 'b')
         }
       }
     }
   }
+
 }

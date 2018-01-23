@@ -1,6 +1,6 @@
 package de.htwg.se.minesweeper
 
-//import de.htwg.se.minesweeper.aview.gui.Gui
+import de.htwg.se.minesweeper.aview.gui.Gui
 import de.htwg.se.minesweeper.controller.Controller
 import de.htwg.se.minesweeper.model.Grid
 import de.htwg.se.minesweeper.aview.Tui
@@ -11,7 +11,7 @@ object MineSweeper {
 
   val controller = new Controller(new Grid(10, 10, 10))
   val tui = new Tui(controller)
-  //val gui = new Gui(controller)
+  val gui = new Gui(controller)
 
   def main(args: Array[String]): Unit = {
     var input: String = ""

@@ -1,7 +1,6 @@
 package de.htwg.se.minesweeper.aview
 
 import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged}
-import de.htwg.se.minesweeper.util.Observer
 
 import scala.swing.Reactor
 
@@ -48,11 +47,11 @@ class Tui(controller: Controller) extends Reactor {
       case "4" => {
         var input: String = readLine()
         var inputCustom = input.split(' ').map(c => c.toInt)
-        if(inputCustom.length != 3) {
-          println("Help: Costum parameters are (height) (width) (mines)")
+        if (inputCustom.length != 3) {
+          println("Help: Custom parameters are (height) (width) (mines)")
           return
         } else {
-          createGrid(inputCustom(0),inputCustom(1),inputCustom(2))
+          createGrid(inputCustom(0), inputCustom(1), inputCustom(2))
           noMineNumber = (inputCustom(0) * inputCustom(1)) - inputCustom(2)
           savedHeight = inputCustom(0)
           savedWidth = inputCustom(1)
@@ -104,7 +103,7 @@ class Tui(controller: Controller) extends Reactor {
             var row = vec(0).toString.toInt
             var col = vec(1).toString.toInt
             var checked = controller.setChecked(row - 1, col - 1)
-            if(controller.getValue(row, col) == 0) {
+            if (controller.getValue(row, col) == 0) {
               controller.depthFirstSearch(row, col)
             }
             if (controller.getMine(row - 1, col - 1)) {
@@ -116,7 +115,7 @@ class Tui(controller: Controller) extends Reactor {
               }
             }
           } else {
-            if(vec(0).toString.equals("f")) {
+            if (vec(0).toString.equals("f")) {
               var row = vec(1).toString.toInt
               var col = vec(2).toString.toInt
               controller.setFlag(row - 1, col - 1)
@@ -127,14 +126,16 @@ class Tui(controller: Controller) extends Reactor {
         }
         if (status == 1) {
           println("Hurray! You win!")
+          return
         } else if (status == 2) {
           println("Game Over!")
+          return
         }
       }
     }
   }
 
-  def createGrid(height: Int, width:Int, numMines: Int): Unit = {
+  def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     controller.createGrid(height, width, numMines)
   }
 

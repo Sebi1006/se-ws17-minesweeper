@@ -1,17 +1,14 @@
-/*package de.htwg.se.minesweeper.aview.gui
+package de.htwg.se.minesweeper.aview.gui
 
+import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged}
 import java.awt._
 import java.awt.Dimension
 import javax.swing._
 import java.awt.event._
-import javax.swing.
-
 import scala.swing.Frame
-import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged}
 
 class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
 
-  listenTo(controller)
   var fwidth: Int = _
   var fheight: Int = _
   var savedHeight: Int = 10
@@ -290,31 +287,35 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     }
   }
 
-
-
   def setIc(): Unit = {
     var name: String = null
     var i: Int = 0
     while (i <= 8) {
       name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
+      // name = "C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
       ic(i) = new ImageIcon(name) { i += 1; i - 1 }
     }
     ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
     ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
     ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
     ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
+    // ic(9) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
+    // ic(10) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
+    // ic(11) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
+    // ic(12) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
   }
 
   def paint(): Unit = {
-    for(i <- 0 until controller.height(); j <- 0 until controller.width()) {
-      if (controller.getColorBack(i, j).equals(Color.LIGHT_GRAY)) {
+    for (i <- 0 until controller.height(); j <- 0 until controller.width()) {
+      if (controller.getColorBack(i, j) == (Color.LIGHT_GRAY)) {
         blocks(i)(j).setBackground(Color.LIGHT_GRAY)
       }
-      if(controller.getChecked(i, j)) {
+      if (controller.getChecked(i, j)) {
         blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
       }
     }
   }
+
   class StopWatch extends JFrame with Runnable {
 
     var startTime: Long = _
@@ -385,7 +386,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
     setSize(180, 200)
     setResizable(false)
-    setLocation(600, 300)
+    setLocation(900, 300)
     p = this.getLocation
     b1.addActionListener(this)
     b2.addActionListener(this)
@@ -430,15 +431,20 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   }
 
-  reactions += {
-    case event: GridSizeChanged => resize(event.height, event.width, event.mineNumber)
-    case event: CellChanged =>
-  }
+  class GuiPanel(controller: Controller) extends Frame {
 
-  def resize(height: Int, width: Int, mineNumber: Int): Unit = {
-    controller.createGrid(height, width, mineNumber)
-    setPanel(height,width)
+    listenTo(controller)
+
+    reactions += {
+      case event: GridSizeChanged => resize(event.height, event.width, event.mineNumber)
+      case event: CellChanged =>
+    }
+
+    def resize(height: Int, width: Int, mineNumber: Int): Unit = {
+      controller.createGrid(height, width, mineNumber)
+      setPanel(height, width)
+    }
+
   }
 
 }
-*/

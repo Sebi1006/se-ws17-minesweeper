@@ -5,6 +5,7 @@ import java.awt.Color
 import scala.util.Random
 
 case class Grid(height: Int, width: Int, numMines: Int) {
+
   var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w', Color.WHITE, false) }
   var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
   var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)

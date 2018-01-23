@@ -33,4 +33,5 @@ case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorB
   }
 
   def getFlag(): Boolean = flag
+
 }
