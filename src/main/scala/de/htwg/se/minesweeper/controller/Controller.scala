@@ -1,24 +1,20 @@
 package de.htwg.se.minesweeper.controller
 
 import de.htwg.se.minesweeper.model.Grid
-
 import java.awt._
 
-class Controller(var grid: Grid) {
+import de.htwg.se.minesweeper.util.Observable
 
-  var arrayGui: Array[Array[Array[Int]]] = Array.ofDim[Array[Int]](height(), width())
-  for(i <- 0 until height(); j <- 0 until width()) {
-    arrayGui(i)(j) = new Array[Int](2)
-    arrayGui(i)(j)(0) = 1
-    arrayGui(i)(j)(1) = 0
-  }
+import scala.swing.{Publisher, event}
 
+class Controller(var grid: Grid) extends Publisher{
+  publish(new GridSizeChanged(grid.height, grid.width, grid.numMines))
   var flag: Boolean = true
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = new Grid(height, width, numMines)
     flag = true
-    println(grid.toString)
+    publish(new GridSizeChanged(height, width, numMines))
   }
 
   def setChecked(row: Int, col: Int): Boolean = {
@@ -31,7 +27,7 @@ class Controller(var grid: Grid) {
       grid.setValues()
       flag = false
     }
-    println(grid.toString)
+    publish(new CellChanged)
     true
   }
 
@@ -76,7 +72,7 @@ class Controller(var grid: Grid) {
 
   def setFlag(row: Int, col: Int): Unit = {
     grid.cell(row, col).setFlag()
-    println(grid.toString)
+    publish(new CellChanged)
   }
 
   def getFlag(row: Int, col: Int): Boolean = {

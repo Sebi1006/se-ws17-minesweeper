@@ -1,14 +1,17 @@
-package de.htwg.se.minesweeper.aview.gui
+/*package de.htwg.se.minesweeper.aview.gui
 
 import java.awt._
 import java.awt.Dimension
 import javax.swing._
 import java.awt.event._
+import javax.swing.
 
-import de.htwg.se.minesweeper.controller.Controller
+import scala.swing.Frame
+import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged}
 
 class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
 
+  listenTo(controller)
   var fwidth: Int = _
   var fheight: Int = _
   var savedHeight: Int = 10
@@ -35,7 +38,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
   setLocation(600, 300)
   setIc()
   controller.createGrid(10, 10, 10)
-  setPanel(1, 0, 0)
+  setPanel(10, 10)
 
   def setMenu(): Unit = {
     val bar: JMenuBar = new JMenuBar()
@@ -51,7 +54,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       def actionPerformed(e: ActionEvent): Unit = {
         controller.createGrid(10, 10, 10)
         numberOfMine = 10
-        setPanel(1, 0, 0)
+        setPanel(10, 10)
       }
     })
     beginner.addActionListener(new ActionListener() {
@@ -60,7 +63,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         reset()
         controller.createGrid(10, 10, 10)
         numberOfMine = 10
-        setPanel(1, 0, 0)
+        setPanel(10, 10)
         lastgame = 1
         savedHeight = 10
         savedWidth = 10
@@ -76,7 +79,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         reset()
         controller.createGrid(16, 16, 70)
         numberOfMine = 70
-        setPanel(2, 0, 0)
+        setPanel(16, 16)
         lastgame = 2
         savedHeight = 16
         savedWidth = 16
@@ -92,7 +95,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         reset()
         controller.createGrid(20, 20, 150)
         numberOfMine = 150
-        setPanel(3, 0, 0)
+        setPanel(20, 20)
         lastgame = 3
         savedHeight = 20
         savedWidth = 20
@@ -133,20 +136,9 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     bar.add(game)
   }
 
-  def setPanel(difficulty: Int, height: Int, width: Int): Unit = {
-    if (difficulty == 1) {
-      fwidth = 200
-      fheight = 300
-    } else if (difficulty == 2) {
-      fwidth = 320
-      fheight = 416
-    } else if (difficulty == 3) {
-      fwidth = 400
-      fheight = 520
-    } else if (difficulty == 4) {
-      fwidth = (20 * width)
-      fheight = (30 * height)
-    }
+  def setPanel(height: Int, width: Int): Unit = {
+    fwidth = (20 * width)
+    fheight = (30 * height)
     setSize(fwidth, fheight)
     setResizable(false)
     detectedMine = numberOfMine
@@ -203,11 +195,11 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       try {
         sw.stop()
         controller.createGrid(savedHeight, savedWidth, savedNumMines)
-        setPanel(lastgame, savedHeight, savedWidth)
+        setPanel(savedHeight, savedWidth)
       } catch {
         case ex: Exception =>
           controller.createGrid(savedHeight, savedWidth, savedNumMines)
-          setPanel(lastgame, savedHeight, savedWidth)
+          setPanel(savedHeight, savedWidth)
       }
       reset()
     }
@@ -420,7 +412,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
           savedNumMines = i3
           numberOfMine = i3
           lastgame = 4
-          setPanel(4, i1, i2)
+          setPanel(i1, i2)
           dispose()
         } catch {
           case ex: Exception => {
@@ -438,4 +430,15 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   }
 
+  reactions += {
+    case event: GridSizeChanged => resize(event.height, event.width, event.mineNumber)
+    case event: CellChanged =>
+  }
+
+  def resize(height: Int, width: Int, mineNumber: Int): Unit = {
+    controller.createGrid(height, width, mineNumber)
+    setPanel(height,width)
+  }
+
 }
+*/

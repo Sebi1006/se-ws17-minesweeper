@@ -1,9 +1,13 @@
 package de.htwg.se.minesweeper.aview
 
-import de.htwg.se.minesweeper.controller.Controller
+import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged}
+import de.htwg.se.minesweeper.util.Observer
 
-class Tui(controller: Controller) {
+import scala.swing.Reactor
 
+class Tui(controller: Controller) extends Reactor {
+
+  listenTo(controller)
   println("Type h for help")
   var lastgame: Int = 1
   var status: Int = 0
@@ -132,6 +136,11 @@ class Tui(controller: Controller) {
 
   def createGrid(height: Int, width:Int, numMines: Int): Unit = {
     controller.createGrid(height, width, numMines)
+  }
+
+  reactions += {
+    case event: GridSizeChanged => println(controller.grid.toString)
+    case event: CellChanged => println(controller.grid.toString)
   }
 
 }
