@@ -74,6 +74,15 @@ class Controller(var grid: Grid) {
     grid.cell(row, col).getColorBack()
   }
 
+  def setFlag(row: Int, col: Int): Unit = {
+    grid.cell(row, col).setFlag()
+    println(grid.toString)
+  }
+
+  def getFlag(row: Int, col: Int): Boolean = {
+    grid.cell(row, col).getFlag()
+  }
+
   def depthFirstSearch(rowD: Int, colD: Int): Unit = {
     var R: Int = 0
     var C: Int = 0

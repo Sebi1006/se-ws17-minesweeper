@@ -2,7 +2,7 @@ package de.htwg.se.minesweeper.model
 
 import java.awt.Color
 
-case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorBack: Color) {
+case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorBack: Color, var flag: Boolean) {
 
   def setValue(value: Int): Unit = {
     this.value = value
@@ -23,9 +23,14 @@ case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorB
   def getColor(): Int = color
 
   def setColorBack(color: Color): Unit = {
-    this.colorBack = colorBack
+    this.colorBack = color
   }
 
   def getColorBack(): Color = colorBack
 
+  def setFlag(): Unit = {
+    this.flag = true
+  }
+
+  def getFlag(): Boolean = flag
 }

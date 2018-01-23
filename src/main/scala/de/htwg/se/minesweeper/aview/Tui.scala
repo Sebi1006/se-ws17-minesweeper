@@ -8,6 +8,9 @@ class Tui(controller: Controller) {
   var lastgame: Int = 1
   var status: Int = 0
   var noMineNumber: Int = 0
+  var savedHeight: Int = 10
+  var savedWidth: Int = 10
+  var savedMines: Int = 10
 
   def processInputLine(input: String): Unit = {
     input match {
@@ -16,6 +19,7 @@ class Tui(controller: Controller) {
         println("Type 2 for Intermediate")
         println("Type 3 for Expert")
         println("Type 4 for Custom")
+        println("Type f to set a flag")
         println("Type exit for Exit")
         println("Type new for New Game")
       }
@@ -38,9 +42,19 @@ class Tui(controller: Controller) {
         lastgame = 3
       }
       case "4" => {
-        createGrid(2, 2, 2)
+        var input: String = readLine()
+        var inputCustom = input.split(' ').map(c => c.toInt)
+        if(inputCustom.length != 3) {
+          println("Help: Costum parameters are (height) (width) (mines)")
+          return
+        } else {
+          createGrid(inputCustom(0),inputCustom(1),inputCustom(2))
+          noMineNumber = (inputCustom(0) * inputCustom(1)) - inputCustom(2)
+          savedHeight = inputCustom(0)
+          savedWidth = inputCustom(1)
+          savedMines = inputCustom(2)
+        }
         status = 0
-        noMineNumber = 2
         lastgame = 4
       }
       case "exit" => {
@@ -64,7 +78,7 @@ class Tui(controller: Controller) {
             noMineNumber = 250
           }
           case 4 => {
-            createGrid(2, 2, 2)
+            createGrid(savedHeight, savedWidth, savedMines)
             status = 0
             noMineNumber = 2
           }
@@ -79,19 +93,31 @@ class Tui(controller: Controller) {
       case _ => {
         if (status == 0) {
           val vec = input.split(' ')
-          if (vec.length != 2) {
+          if (vec.length != 2 && vec.length != 3) {
             println("Wrong number of arguments")
-          } else {
+            return
+          } else if(vec.length == 2) {
             var row = vec(0).toString.toInt
             var col = vec(1).toString.toInt
-            var flag = controller.setChecked(row - 1, col - 1)
+            var checked = controller.setChecked(row - 1, col - 1)
+            if(controller.getValue(row, col) == 0) {
+              controller.depthFirstSearch(row, col)
+            }
             if (controller.getMine(row - 1, col - 1)) {
               status = 2
-            } else if (flag) {
+            } else if (checked) {
               noMineNumber -= 1
               if (noMineNumber == 0) {
                 status = 1
               }
+            }
+          } else {
+            if(vec(0).toString.equals("f")) {
+              var row = vec(1).toString.toInt
+              var col = vec(2).toString.toInt
+              controller.setFlag(row - 1, col - 1)
+            } else {
+              println("Please use f")
             }
           }
         }

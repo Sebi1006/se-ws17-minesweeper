@@ -5,7 +5,7 @@ import java.awt.Color
 import scala.util.Random
 
 case class Grid(height: Int, width: Int, numMines: Int) {
-  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w', Color.WHITE) }
+  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w', Color.WHITE, false) }
   var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
   var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
 
@@ -64,7 +64,11 @@ case class Grid(height: Int, width: Int, numMines: Int) {
       row <- 0 until height
       col <- 0 until width
     } if (!cell(row, col).checked) {
-      box = box.replaceFirst("y", "x")
+        if(!cell(row, col).flag) {
+          box = box.replaceFirst("y", "x")
+        } else {
+          box = box.replaceFirst("y", "f")
+        }
     } else {
       if (cell(row,col).getValue() == -1) {
         box = box.replaceFirst("y", "b")

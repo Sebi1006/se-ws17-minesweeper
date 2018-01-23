@@ -315,7 +315,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   def paint(): Unit = {
     for(i <- 0 until controller.height(); j <- 0 until controller.width()) {
-      println(blocks(i)(j).getBackground)
       if (controller.getColorBack(i, j).equals(Color.LIGHT_GRAY)) {
         blocks(i)(j).setBackground(Color.LIGHT_GRAY)
       }
