@@ -93,7 +93,6 @@ class Controller(var grid: Grid) extends Publisher {
           depthFirstSearch(R, C)
         } else {
           setChecked(R, C)
-          // blocks(R)(C).setIcon(ic(getValue(R, C)))
           setColor(R, C, 'b')
         }
       }
