@@ -27,8 +27,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
   var startTimeBool: Boolean = false
   var sw: StopWatch = new StopWatch()
   var mh: MouseHandler = _
-  var p: Point = _
-  var lastgame: Int = 1
   var var1: Int = _
   var var2: Int = _
 
@@ -65,7 +63,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         controller.createGrid(10, 10, 10)
         numberOfMine = 10
         setPanel(10, 10)
-        lastgame = 1
         savedHeight = 10
         savedWidth = 10
         savedNumMines = 10
@@ -81,7 +78,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         controller.createGrid(16, 16, 70)
         numberOfMine = 70
         setPanel(16, 16)
-        lastgame = 2
         savedHeight = 16
         savedWidth = 16
         savedNumMines = 70
@@ -97,7 +93,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         controller.createGrid(20, 20, 150)
         numberOfMine = 150
         setPanel(20, 20)
-        lastgame = 3
         savedHeight = 20
         savedWidth = 20
         savedNumMines = 150
@@ -143,7 +138,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     setSize(fwidth, fheight)
     setResizable(false)
     detectedMine = numberOfMine
-    p = this.getLocation
     blocks = Array.ofDim[JButton](controller.height(), controller.width())
     mh = new MouseHandler()
     getContentPane.removeAll()
@@ -385,7 +379,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     setSize(180, 200)
     setResizable(false)
     setLocation(900, 300)
-    p = this.getLocation
     b1.addActionListener(this)
     b2.addActionListener(this)
     getContentPane.setLayout(new GridLayout(0, 2))
@@ -414,7 +407,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
           savedWidth = i2
           savedNumMines = i3
           numberOfMine = i3
-          lastgame = 4
           setPanel(i1, i2)
           dispose()
         } catch {
