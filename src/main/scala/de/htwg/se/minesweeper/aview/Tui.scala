@@ -1,8 +1,9 @@
 package de.htwg.se.minesweeper.aview
 
-import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged}
+import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged, Winner}
 
 import scala.swing.Reactor
+import scala.io.StdIn.readLine
 
 class Tui(controller: Controller) extends Reactor {
 
@@ -51,6 +52,10 @@ class Tui(controller: Controller) extends Reactor {
           println("Help: Custom parameters are (height) (width) (mines)")
           return
         } else {
+          if (inputCustom(0) < 10 || inputCustom(1) < 10) {
+            println("Height and Width must be min 10")
+            return
+          }
           createGrid(inputCustom(0), inputCustom(1), inputCustom(2))
           noMineNumber = (inputCustom(0) * inputCustom(1)) - inputCustom(2)
           savedHeight = inputCustom(0)
@@ -102,34 +107,19 @@ class Tui(controller: Controller) extends Reactor {
           } else if(vec.length == 2) {
             var row = vec(0).toString.toInt
             var col = vec(1).toString.toInt
-            var checked = controller.setChecked(row - 1, col - 1)
-            if (controller.getValue(row, col) == 0) {
+            controller.setChecked(row - 1, col - 1)
+            if (controller.getValue(row - 1, col - 1) == 0) {
               controller.depthFirstSearch(row, col)
             }
-            if (controller.getMine(row - 1, col - 1)) {
-              status = 2
-            } else if (checked._1) {
-              noMineNumber -= 1
-              if (noMineNumber == 0) {
-                status = 1
-              }
-            }
           } else {
-            if (vec(0).toString.equals("f")) {
-              var row = vec(1).toString.toInt
-              var col = vec(2).toString.toInt
-              controller.setFlag(row - 1, col - 1)
-            } else {
-              println("Please use f")
-            }
+              if (vec(0).toString.equals("f")) {
+                var row = vec(1).toString.toInt
+                var col = vec(2).toString.toInt
+                controller.setFlag(row - 1, col - 1)
+              } else {
+                println("Please use f")
+              }
           }
-        }
-        if (status == 1) {
-          println("Hurray! You win!")
-          return
-        } else if (status == 2) {
-          println("Game Over!")
-          return
         }
       }
     }
@@ -140,8 +130,20 @@ class Tui(controller: Controller) extends Reactor {
   }
 
   reactions += {
-    case event: GridSizeChanged => println(controller.grid.toString)
+    case event: GridSizeChanged => {
+      println(controller.grid.toString)
+      status = 0
+    }
     case event: CellChanged => println(controller.grid.toString)
+    case event: Winner => {
+      if (event.win) {
+        println("Hurray! You win!")
+        status = 1
+      } else {
+        println("Game Over!")
+        status = 2
+      }
+    }
   }
 
 }

@@ -16,9 +16,9 @@ class Controller(var grid: Grid) extends Publisher {
     publish(new GridSizeChanged(height, width, numMines))
   }
 
-  def setChecked(row: Int, col: Int): (Boolean, Int) = {
+  def setChecked(row: Int, col: Int): Unit = {
     if (grid.cell(row, col).getChecked) {
-      return (false, winner(row, col))
+      return
     }
     grid.cell(row, col).setChecked(true)
     if (flag) {
@@ -26,8 +26,8 @@ class Controller(var grid: Grid) extends Publisher {
       grid.setValues()
       flag = false
     }
-    publish(new CellChanged)
-    (true, winner(row, col))
+    winner(row, col)
+    publish(new CellChanged(row, col, false))
   }
 
   def getChecked(row: Int, col: Int): Boolean = {
@@ -71,7 +71,7 @@ class Controller(var grid: Grid) extends Publisher {
 
   def setFlag(row: Int, col: Int): Unit = {
     grid.cell(row, col).setFlag()
-    publish(new CellChanged)
+    publish(new CellChanged(row, col, true))
   }
 
   def getFlag(row: Int, col: Int): Boolean = {
@@ -100,16 +100,14 @@ class Controller(var grid: Grid) extends Publisher {
     }
   }
 
-  def winner(row: Int, col: Int): Int = {
+  def winner(row: Int, col: Int): Unit = {
     if(grid.cell(row, col).getValue() != -1) {
       noMineCount -= 1
     } else {
-      return 2
+      publish(new Winner(false))
     }
     if(noMineCount == 0) {
-      1
-    } else {
-      0
+      publish(new Winner(true))
     }
   }
 
