@@ -108,7 +108,7 @@ class Tui(controller: Controller) extends Reactor {
             }
             if (controller.getMine(row - 1, col - 1)) {
               status = 2
-            } else if (checked) {
+            } else if (checked._1) {
               noMineNumber -= 1
               if (noMineNumber == 0) {
                 status = 1

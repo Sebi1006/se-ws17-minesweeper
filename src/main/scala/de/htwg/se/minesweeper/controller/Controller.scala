@@ -5,19 +5,20 @@ import java.awt._
 import scala.swing.{Publisher, event}
 
 class Controller(var grid: Grid) extends Publisher {
-
   publish(new GridSizeChanged(grid.height, grid.width, grid.numMines))
+  var noMineCount: Int = grid.height * grid.width - grid.numMines
   var flag: Boolean = true
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = new Grid(height, width, numMines)
+    noMineCount = height * width - numMines
     flag = true
     publish(new GridSizeChanged(height, width, numMines))
   }
 
-  def setChecked(row: Int, col: Int): Boolean = {
+  def setChecked(row: Int, col: Int): (Boolean, Int) = {
     if (grid.cell(row, col).getChecked) {
-      return false
+      return (false, winner(row, col))
     }
     grid.cell(row, col).setChecked(true)
     if (flag) {
@@ -26,7 +27,7 @@ class Controller(var grid: Grid) extends Publisher {
       flag = false
     }
     publish(new CellChanged)
-    true
+    (true, winner(row, col))
   }
 
   def getChecked(row: Int, col: Int): Boolean = {
@@ -96,6 +97,19 @@ class Controller(var grid: Grid) extends Publisher {
           setColor(R, C, 'b')
         }
       }
+    }
+  }
+
+  def winner(row: Int, col: Int): Int = {
+    if(grid.cell(row, col).getValue() != -1) {
+      noMineCount -= 1
+    } else {
+      return 2
+    }
+    if(noMineCount == 0) {
+      1
+    } else {
+      0
     }
   }
 

@@ -221,9 +221,15 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         var1 = i
         var2 = j
       }
-      controller.setChecked(var1, var2)
+      if(me.getButton == MouseEvent.BUTTON1) {
+        var win = controller.setChecked(var1, var2)
+        if(win._2 != 0) {
+          winner(win._2)
+        }
+      } else {
+        controller.setFlag(var1, var2)
+      }
       showValue(me)
-      winner()
       if (startTimeBool == false) {
         sw.start()
         startTimeBool = true
@@ -232,18 +238,23 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   }
 
-  def winner(): Unit = {
-    var q: Int = 0
-    for (k <- 0 until controller.height; l <- 0 until controller.width
-         if controller.getColor(k, l) == 'w') {
-      q = 1
-    }
-    if (q == 0) {
+  def winner(win: Int): Unit = {
+    if(win == 1) {
       for (k <- 0 until controller.height; l <- 0 until controller.width) {
         blocks(k)(l).removeMouseListener(mh)
       }
       sw.stop()
       JOptionPane.showMessageDialog(this, "Hurray! You win!")
+    } else {
+      for (k <- 0 until controller.height; l <- 0 until controller.width) {
+        if (controller.getMine(k, l)) {
+          blocks(k)(l).setIcon(ic(9))
+          blocks(k)(l).removeMouseListener(mh)
+        }
+      }
+      sw.stop()
+      resetButton.setIcon(ic(12))
+      JOptionPane.showMessageDialog(this, "Game Over!")
     }
   }
 
@@ -251,6 +262,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     for (i <- 0 until controller.height; j <- 0 until controller.width
          if e.getSource == blocks(i)(j)) {
       if (e.isMetaDown == false) {
+        println("1")
         if (blocks(i)(j).getIcon == ic(10)) {
           if (detectedMine < numberOfMine) {
             { detectedMine += 1; detectedMine - 1 }
@@ -258,16 +270,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
           tf_mine.setText("" + detectedMine)
         }
         if (controller.getMine(i, j)) {
-          for (k <- 0 until controller.height; l <- 0 until controller.width) {
-            if (controller.getMine(k, l)) {
-              blocks(k)(l).setIcon(ic(9))
-              blocks(k)(l).removeMouseListener(mh)
-            }
-            blocks(k)(l).removeMouseListener(mh)
-          }
-          sw.stop()
-          resetButton.setIcon(ic(12))
-          JOptionPane.showMessageDialog(null, "Game Over!")
         } else if (!controller.getMine(i, j)) {
           controller.depthFirstSearch(i, j)
           paint()
@@ -292,17 +294,12 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     var i: Int = 0
     while (i <= 8) {
       name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
-      // name = "C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
       ic(i) = new ImageIcon(name) { i += 1; i - 1 }
     }
     ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
     ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
     ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
     ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
-    // ic(9) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
-    // ic(10) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
-    // ic(11) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
-    // ic(12) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
   }
 
   def paint(): Unit = {
@@ -311,7 +308,11 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         blocks(i)(j).setBackground(Color.LIGHT_GRAY)
       }
       if (controller.getChecked(i, j)) {
-        blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
+        if (controller.getValue(i, j) == -1) {
+          blocks(i)(j).setIcon(ic(10))
+        } else {
+          blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
+        }
       }
     }
   }
