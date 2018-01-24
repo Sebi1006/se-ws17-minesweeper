@@ -2,32 +2,50 @@ package de.htwg.se.minesweeper.controller
 
 import de.htwg.se.minesweeper.model.Grid
 import java.awt._
-import scala.swing.{Publisher, event}
+import de.htwg.se.minesweeper.util.UndoManager
+
+import scala.swing.Publisher
 
 class Controller(var grid: Grid) extends Publisher {
   publish(new GridSizeChanged(grid.height, grid.width, grid.numMines))
   var noMineCount: Int = grid.height * grid.width - grid.numMines
+  var mineFound: Int = 0
   var flag: Boolean = true
+  private val undoManager = new UndoManager
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = new Grid(height, width, numMines)
     noMineCount = height * width - numMines
+    mineFound = numMines
     flag = true
     publish(new GridSizeChanged(height, width, numMines))
   }
 
-  def setChecked(row: Int, col: Int): Unit = {
-    if (grid.cell(row, col).getChecked) {
-      return
+  def setChecked(row: Int, col: Int, undo: Boolean, command: Boolean): Unit = {
+    if(command) {
+      undoManager.doStep(new SetCommand(row, col, undo, this))
     }
-    grid.cell(row, col).setChecked(true)
-    if (flag) {
-      grid.setMines(row, col)
-      grid.setValues()
-      flag = false
+    if(!undo) {
+      if (grid.cell(row, col).getChecked) {
+        return
+      }
+      grid.cell(row, col).setChecked(true)
+      if (flag) {
+        grid.setMines(row, col)
+        grid.setValues()
+        flag = false
+      }
+      if(grid.cell(row, col).getValue() == 0) {
+        depthFirstSearch(row, col)
+      }
+      winner(row, col, undo)
+    } else {
+      if(!grid.cell(row, col).getChecked()) {
+        return
+      }
+      grid.cell(row, col).setChecked(false)
     }
-    winner(row, col)
-    publish(new CellChanged(row, col, false))
+    publish(new CellChanged())
   }
 
   def getChecked(row: Int, col: Int): Boolean = {
@@ -71,7 +89,8 @@ class Controller(var grid: Grid) extends Publisher {
 
   def setFlag(row: Int, col: Int): Unit = {
     grid.cell(row, col).setFlag()
-    publish(new CellChanged(row, col, true))
+    mineFound -= 1
+    publish(new CellChanged())
   }
 
   def getFlag(row: Int, col: Int): Boolean = {
@@ -83,7 +102,7 @@ class Controller(var grid: Grid) extends Publisher {
     var C: Int = 0
     setColor(rowD, colD, 'b')
     setColorBack(rowD, colD, Color.LIGHT_GRAY)
-    setChecked(rowD, colD)
+    setChecked(rowD, colD, false, true)
     for (i <- 0.until(8)) {
       R = rowD + grid.row(i)
       C = colD + grid.col(i)
@@ -92,23 +111,41 @@ class Controller(var grid: Grid) extends Publisher {
         if (getValue(R, C) == 0) {
           depthFirstSearch(R, C)
         } else {
-          setChecked(R, C)
+          setChecked(R, C, false, true)
           setColor(R, C, 'b')
-          println("1")
         }
       }
     }
   }
 
-  def winner(row: Int, col: Int): Unit = {
-    if(grid.cell(row, col).getValue() != -1) {
-      noMineCount -= 1
+  def winner(row: Int, col: Int, undo: Boolean): Unit = {
+    if(!undo) {
+      if (grid.cell(row, col).getValue() != -1) {
+        noMineCount -= 1
+      } else {
+        publish(new Winner(false))
+      }
+      if (noMineCount == 0) {
+        publish(new Winner(true))
+      }
     } else {
-      publish(new Winner(false))
+      if (grid.cell(row, col).getValue() == -1) {
+        noMineCount += 1
+      }
+      if (noMineCount == 0) {
+        publish(new Winner(true))
+      }
     }
-    if(noMineCount == 0) {
-      publish(new Winner(true))
-    }
+  }
+
+  def undo(): Unit = {
+    undoManager.undoStep
+    publish(new CellChanged())
+  }
+
+  def redo(): Unit = {
+    undoManager.redoStep
+    publish(new CellChanged())
   }
 
 }

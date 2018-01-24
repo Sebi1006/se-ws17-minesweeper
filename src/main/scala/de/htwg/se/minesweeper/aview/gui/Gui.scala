@@ -48,6 +48,9 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     val expert: JCheckBoxMenuItem = new JCheckBoxMenuItem("Expert")
     val custom: JCheckBoxMenuItem = new JCheckBoxMenuItem("Custom...")
     val exit: JMenuItem = new JMenuItem("Exit")
+    val edit: JMenu = new JMenu("Edit")
+    val undo: JMenuItem = new JMenuItem("Undo")
+    val redo: JMenuItem = new JMenuItem("Redo")
     val status: ButtonGroup = new ButtonGroup()
     menuitem.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
@@ -116,6 +119,16 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         System.exit(0)
       }
     })
+    undo.addActionListener(new ActionListener {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        controller.undo
+      }
+    })
+    redo.addActionListener(new ActionListener {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        controller.redo
+      }
+    })
     setJMenuBar(bar)
     status.add(beginner)
     status.add(intermediate)
@@ -130,6 +143,9 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     game.addSeparator()
     game.add(exit)
     bar.add(game)
+    edit.add(undo)
+    edit.add(redo)
+    bar.add(edit)
   }
 
   def setPanel(height: Int, width: Int): Unit = {
@@ -223,7 +239,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         var2 = j
       }
       if(me.getButton == MouseEvent.BUTTON1) {
-        controller.setChecked(var1, var2)
+        controller.setChecked(var1, var2, false, true)
       } else {
         controller.setFlag(var1, var2)
       }
@@ -253,29 +269,13 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     }
   }
 
-  def showValue(mouse: Boolean, i: Int, j: Int): Unit = {
-    if (!mouse) {
-      if (blocks(i)(j).getIcon == ic(10)) {
-        if (detectedMine < numberOfMine) {
-          { detectedMine += 1; detectedMine - 1 }
-        }
-        tf_mine.setText("" + detectedMine)
-      }
-      if (controller.getValue(i, j) == 0) {
-        controller.depthFirstSearch(i, j)
-        paint()
-      } else if(!controller.getMine(i, j)){
-        blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
-        controller.setColor(i, j, 'b')
-      }
+  def updateTextfield(): Unit = {
+    if (controller.mineFound >= 0) {
+      tf_mine.setText("" + controller.mineFound)
+      paint()
     } else {
-      if (detectedMine != 0) {
-        if (blocks(i)(j).getIcon == null) {
-          { detectedMine -= 1; detectedMine + 1 }
-          blocks(i)(j).setIcon(ic(10))
-        }
-        tf_mine.setText("" + detectedMine)
-      }
+      tf_mine.setText("" + 0)
+      paint()
     }
   }
 
@@ -295,15 +295,20 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   def paint(): Unit = {
     for (i <- 0 until controller.height(); j <- 0 until controller.width()) {
-      if (controller.getColorBack(i, j) == (Color.LIGHT_GRAY)) {
-        blocks(i)(j).setBackground(Color.LIGHT_GRAY)
-      }
       if (controller.getChecked(i, j)) {
+        if (controller.getColorBack(i, j) == (Color.LIGHT_GRAY)) {
+          blocks(i)(j).setBackground(Color.LIGHT_GRAY)
+        }
         if (controller.getValue(i, j) == -1) {
-          blocks(i)(j).setIcon(ic(10))
+          blocks(i)(j).setIcon(ic(9))
         } else {
           blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
         }
+      } else if(controller.getFlag(i, j)){
+        blocks(i)(j).setIcon(ic(10))
+      } else {
+        blocks(i)(j).setIcon(null)
+        blocks(i)(j).setBackground(null)
       }
     }
   }
@@ -398,8 +403,14 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
           i1 = java.lang.Integer.parseInt(tf1.getText)
           i2 = java.lang.Integer.parseInt(tf2.getText)
           i3 = java.lang.Integer.parseInt(tf3.getText)
-          if (i1 < 10 || i2 < 10) {
-            println("Height and Width must be min 10")
+          if(i3 >= i1 * i2) {
+            JOptionPane.showMessageDialog(this, "Mine Number must be smaller than grid size")
+            return
+          } else if (i1 < 10 || i2 < 10 || i3 < 10) {
+            JOptionPane.showMessageDialog(this, "Height, Width and Mines must be min 10")
+            return
+          } else if(i1 > 35 || i2 > 35) {
+            JOptionPane.showMessageDialog(this, "Height and width may not exceed 35")
             return
           }
           controller.createGrid(i1, i2, i3)
@@ -432,7 +443,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
     reactions += {
       case event: GridSizeChanged => resize(event.height, event.width, event.mineNumber)
-      case event: CellChanged => repaint(event.row, event.col, event.mouse)
+      case event: CellChanged => repaintGrid()
       case event: Winner => winner(event.win)
     }
 
@@ -448,12 +459,12 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       panelBlock.repaint()
     }
 
-    def repaint(row: Int, col: Int, mouse: Boolean): Unit = {
+    def repaintGrid(): Unit = {
       if (startTimeBool == false) {
         sw.start()
         startTimeBool = true
       }
-      showValue(mouse, row, col)
+      updateTextfield()
     }
   }
 

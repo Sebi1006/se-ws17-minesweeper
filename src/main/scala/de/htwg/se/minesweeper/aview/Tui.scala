@@ -52,8 +52,14 @@ class Tui(controller: Controller) extends Reactor {
           println("Help: Custom parameters are (height) (width) (mines)")
           return
         } else {
-          if (inputCustom(0) < 10 || inputCustom(1) < 10) {
-            println("Height and Width must be min 10")
+          if(inputCustom(2) >= inputCustom(0) * inputCustom(1)) {
+            println("Mine Number must be smaller than grid size")
+            return
+          } else if (inputCustom(0) < 10 || inputCustom(1) < 10 || inputCustom(2) < 10) {
+            println("Height, Width and Mines must be min 10")
+            return
+          } else if(inputCustom(0) > 35 || inputCustom(1) > 35) {
+            println("Height and width may not exceed 35")
             return
           }
           createGrid(inputCustom(0), inputCustom(1), inputCustom(2))
@@ -107,10 +113,7 @@ class Tui(controller: Controller) extends Reactor {
           } else if(vec.length == 2) {
             var row = vec(0).toString.toInt
             var col = vec(1).toString.toInt
-            controller.setChecked(row - 1, col - 1)
-            if (controller.getValue(row - 1, col - 1) == 0) {
-              controller.depthFirstSearch(row, col)
-            }
+            controller.setChecked(row - 1, col - 1, false, true)
           } else {
               if (vec(0).toString.equals("f")) {
                 var row = vec(1).toString.toInt
