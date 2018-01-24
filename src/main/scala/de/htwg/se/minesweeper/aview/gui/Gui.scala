@@ -1,10 +1,12 @@
 package de.htwg.se.minesweeper.aview.gui
 
-import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged, Winner}
+import de.htwg.se.minesweeper.controller.{CellChanged, GridSizeChanged, Winner}
 import java.awt._
 import java.awt.Dimension
 import javax.swing._
 import java.awt.event._
+
+import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
 
 import scala.swing.Frame
 

@@ -1,9 +1,9 @@
 package de.htwg.se.minesweeper
 
 import de.htwg.se.minesweeper.aview.gui.Gui
-import de.htwg.se.minesweeper.controller.Controller
-import de.htwg.se.minesweeper.model.Grid
 import de.htwg.se.minesweeper.aview.Tui
+import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
+import de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl.Grid
 
 import scala.io.StdIn.readLine
 

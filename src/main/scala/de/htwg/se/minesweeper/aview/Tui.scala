@@ -1,6 +1,7 @@
 package de.htwg.se.minesweeper.aview
 
-import de.htwg.se.minesweeper.controller.{CellChanged, Controller, GridSizeChanged, Winner}
+import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
+import de.htwg.se.minesweeper.controller.{CellChanged, GridSizeChanged, Winner}
 
 import scala.swing.Reactor
 import scala.io.StdIn.readLine
