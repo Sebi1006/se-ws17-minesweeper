@@ -94,6 +94,7 @@ class Controller(var grid: Grid) extends Publisher {
         } else {
           setChecked(R, C)
           setColor(R, C, 'b')
+          println("1")
         }
       }
     }
