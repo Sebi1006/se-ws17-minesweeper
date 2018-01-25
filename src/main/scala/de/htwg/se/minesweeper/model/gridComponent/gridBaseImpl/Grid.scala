@@ -21,7 +21,7 @@ case class Grid @AssistedInject() () extends GridInterface {
     matrix = Vector.tabulate(height, width) { (row, col) => new Cell() }
   }
 
-  def cell(row: Int, col: Int): Cell = {
+  def cell(row: Int, col: Int): CellInterface = {
     matrix(row)(col)
   }
 
@@ -95,8 +95,8 @@ case class Grid @AssistedInject() () extends GridInterface {
     for {
       row <- 0 until height
       col <- 0 until width
-    } if (!cell(row, col).checked) {
-        if (!cell(row, col).flag) {
+    } if (!cell(row, col).getChecked()) {
+        if (!cell(row, col).getFlag()) {
           box = box.replaceFirst("y", "x")
         } else {
           box = box.replaceFirst("y", "f")

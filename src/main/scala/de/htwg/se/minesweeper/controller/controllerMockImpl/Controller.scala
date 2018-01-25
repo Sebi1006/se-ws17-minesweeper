@@ -31,4 +31,8 @@ class Controller(var grid: GridInterface) extends ControllerInterface {
   def redo(): Unit = {}
   def solve(): Unit = {}
 
+  def save(): Unit = {}
+
+  def load(): Unit = {}
+
 }

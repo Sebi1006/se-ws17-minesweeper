@@ -9,6 +9,7 @@ import de.htwg.se.minesweeper.util.UndoManager
 import java.awt._
 
 import de.htwg.se.minesweeper.MineSweeperModule
+import de.htwg.se.minesweeper.model.fileIoComponent.FileIOInterface
 
 import scala.swing.Publisher
 
@@ -20,6 +21,7 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   var mineFound: Int = 0
   var flag: Boolean = true
   private val undoManager = new UndoManager
+  val fileIo = injector.instance[FileIOInterface]
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = injector.instance[GridFactory].create()
@@ -162,4 +164,13 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
     publish(new CellChanged())
   }
 
+  def save: Unit = {
+    fileIo.save(grid)
+    publish(new CellChanged)
+  }
+
+  def load: Unit = {
+    grid = fileIo.load
+    publish(new CellChanged)
+  }
 }
