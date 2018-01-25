@@ -20,6 +20,9 @@ class Cell @AssistedInject() () extends CellInterface {
     setFlag(flag)
   }
 
+  def getAll(): (Int, Boolean, Int, Color, Boolean) = {
+    (getValue(), getChecked(), getColor(), getColorBack(), getFlag())
+  }
   def setValue(value: Int): Unit = {
     this.value = value
   }

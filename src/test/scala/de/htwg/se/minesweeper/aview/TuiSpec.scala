@@ -31,18 +31,18 @@ class TuiSpec  extends WordSpec with Matchers{
     }
     "create an empty minesweeper on input '4'" in {
       tui.processInputLine("4\n")
-      var input = "10 20 20\n"
+      var input = "10 20 20"
       tui.processInputLine(input)
       g.init(10,20,20)
       controller.grid should be(g)
     }
     "set a cell on input '2 2'" in {
-      var input = "2 2\n"
+      var input = "2 2"
       tui.processInputLine(input)
       controller.grid.cell(2,2).getChecked() should be(true)
     }
     "set flag on input 'f 2 3'" in {
-      var input = "f 2 3\n"
+      var input = "f 2 3"
       tui.processInputLine(input)
       controller.grid.cell(2,3).getFlag() should be(true)
     }

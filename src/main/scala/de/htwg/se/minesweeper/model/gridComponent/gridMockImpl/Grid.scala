@@ -21,6 +21,8 @@ class Grid() extends GridInterface {
 object EmptyCell extends CellInterface {
 
   def init(checked: Boolean, value: Int, color: Int, colorBack: Color, flag: Boolean): Unit = {}
+
+  def getAll(): (Int, Boolean, Int, Color, Boolean) = (0, false, 'w', null, false)
   def setValue(value: Int): Unit = {}
   def getValue(): Int = 0
   def setChecked(checked: Boolean): Unit = {}

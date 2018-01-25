@@ -25,6 +25,7 @@ trait GridFactory {
 trait CellInterface {
 
   def init(checked: Boolean, value: Int, color: Int, colorBack: Color, flag: Boolean): Unit
+  def getAll(): (Int, Boolean, Int, Color, Boolean)
   def setValue(value: Int): Unit
   def getValue(): Int
   def setChecked(checked: Boolean): Unit
