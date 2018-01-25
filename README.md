@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Sebi1006/se-ws17-minesweeper.svg?branch=dev)](https://travis-ci.org/Sebi1006/se-ws17-minesweeper) - [![Coverage Status](https://coveralls.io/repos/github/Sebi1006/se-ws17-minesweeper/badge.svg?branch=dev)](https://coveralls.io/github/Sebi1006/se-ws17-minesweeper?branch=master) - Dev
+[![Build Status](https://travis-ci.org/Sebi1006/se-ws17-minesweeper.svg?branch=master)](https://travis-ci.org/Sebi1006/se-ws17-minesweeper) - [![Coverage Status](https://coveralls.io/repos/github/Sebi1006/se-ws17-minesweeper/badge.svg?branch=master)](https://coveralls.io/github/Sebi1006/se-ws17-minesweeper?branch=master) - Master
 
 # Htwg Scala Seed Project 
 =====================================================
