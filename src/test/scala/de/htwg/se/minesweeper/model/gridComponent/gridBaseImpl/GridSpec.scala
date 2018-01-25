@@ -38,6 +38,8 @@ class GridSpec extends WordSpec with Matchers {
           smallGrid.cell(0, 1).getAll() should be(c.getAll())
           smallGrid.cell(1, 0).getAll() should be(c.getAll())
           smallGrid.cell(1, 1).getAll() should be(c.getAll())
+          g.getCol(2) should be(-1)
+          g.getRow(2) should be(1)
         }
         "allow to set individual Cells and remain immutable" in {
           smallGrid.cell(0, 0).setChecked(true)
@@ -62,6 +64,7 @@ class GridSpec extends WordSpec with Matchers {
         }
       }
     }
+
   }
 }
 
