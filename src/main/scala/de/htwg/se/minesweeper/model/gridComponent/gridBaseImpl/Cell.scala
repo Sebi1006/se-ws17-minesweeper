@@ -1,10 +1,9 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
+import de.htwg.se.minesweeper.model.gridComponent.CellInterface
 import java.awt.Color
 
-import de.htwg.se.minesweeper.model.gridComponent.CellInterface
-
-case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorBack: Color, var flag: Boolean) extends CellInterface{
+case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorBack: Color, var flag: Boolean) extends CellInterface {
 
   def setValue(value: Int): Unit = {
     this.value = value

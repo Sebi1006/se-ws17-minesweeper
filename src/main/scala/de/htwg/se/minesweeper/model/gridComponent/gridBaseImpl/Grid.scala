@@ -1,9 +1,7 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
-import java.awt.Color
-
 import de.htwg.se.minesweeper.model.gridComponent.{CellInterface, GridInterface}
-
+import java.awt.Color
 import scala.util.Random
 
 case class Grid(height: Int, width: Int, numMines: Int) extends GridInterface {
@@ -87,7 +85,7 @@ case class Grid(height: Int, width: Int, numMines: Int) extends GridInterface {
       row <- 0 until height
       col <- 0 until width
     } if (!cell(row, col).checked) {
-        if(!cell(row, col).flag) {
+        if (!cell(row, col).flag) {
           box = box.replaceFirst("y", "x")
         } else {
           box = box.replaceFirst("y", "f")

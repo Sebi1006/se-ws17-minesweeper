@@ -1,34 +1,33 @@
 package de.htwg.se.minesweeper.controller.controllerBaseImpl
 
-import java.awt._
-
 import de.htwg.se.minesweeper.controller.{CellChanged, ControllerInterface, GridSizeChanged, Winner}
 import de.htwg.se.minesweeper.model.gridComponent.GridInterface
 import de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.minesweeper.util.UndoManager
-
+import java.awt._
 import scala.swing.Publisher
 
 class Controller(var grid: GridInterface) extends ControllerInterface with Publisher {
+
   publish(new GridSizeChanged(grid.getHeight, grid.getWidth, grid.getNumMines))
-  var noMineCount: Int = grid.getHeight * grid.getWidth - grid.getNumMines
+  var noMineCount: Int = (grid.getHeight * grid.getWidth) - grid.getNumMines
   var mineFound: Int = 0
   var flag: Boolean = true
   private val undoManager = new UndoManager
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = new Grid(height, width, numMines)
-    noMineCount = height * width - numMines
+    noMineCount = (height * width) - numMines
     mineFound = numMines
     flag = true
     publish(new GridSizeChanged(height, width, numMines))
   }
 
   def setChecked(row: Int, col: Int, undo: Boolean, command: Boolean): Unit = {
-    if(command) {
+    if (command) {
       undoManager.doStep(new SetCommand(row, col, undo, this))
     }
-    if(!undo) {
+    if (!undo) {
       if (grid.cell(row, col).getChecked) {
         return
       }
@@ -43,7 +42,7 @@ class Controller(var grid: GridInterface) extends ControllerInterface with Publi
       }
       winner(row, col, undo)
     } else {
-      if(!grid.cell(row, col).getChecked()) {
+      if (!grid.cell(row, col).getChecked()) {
         return
       }
       grid.cell(row, col).setChecked(false)
@@ -122,7 +121,7 @@ class Controller(var grid: GridInterface) extends ControllerInterface with Publi
   }
 
   def winner(row: Int, col: Int, undo: Boolean): Unit = {
-    if(!undo) {
+    if (!undo) {
       if (grid.cell(row, col).getValue() != -1) {
         noMineCount -= 1
       } else {

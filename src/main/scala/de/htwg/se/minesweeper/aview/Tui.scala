@@ -2,14 +2,13 @@ package de.htwg.se.minesweeper.aview
 
 import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
 import de.htwg.se.minesweeper.controller.{CellChanged, GridSizeChanged, Winner}
-
 import scala.swing.Reactor
 import scala.io.StdIn.readLine
 
 class Tui(controller: Controller) extends Reactor {
 
   listenTo(controller)
-  println("Type h for help")
+  println("Type h for Help")
   var lastgame: Int = 1
   var status: Int = 0
   var noMineNumber: Int = 0
@@ -53,14 +52,14 @@ class Tui(controller: Controller) extends Reactor {
           println("Help: Custom parameters are (height) (width) (mines)")
           return
         } else {
-          if(inputCustom(2) >= inputCustom(0) * inputCustom(1)) {
-            println("Mine Number must be smaller than grid size")
+          if (inputCustom(2) >= inputCustom(0) * inputCustom(1)) {
+            println("Number of Mines must be smaller than grid size")
             return
           } else if (inputCustom(0) < 10 || inputCustom(1) < 10 || inputCustom(2) < 10) {
-            println("Height, Width and Mines must be min 10")
+            println("Height, Width and Number of Mines must be minimum 10")
             return
-          } else if(inputCustom(0) > 35 || inputCustom(1) > 35) {
-            println("Height and width may not exceed 35")
+          } else if (inputCustom(0) > 35 || inputCustom(1) > 35) {
+            println("Height and Width may not exceed 35")
             return
           }
           createGrid(inputCustom(0), inputCustom(1), inputCustom(2))
@@ -95,7 +94,7 @@ class Tui(controller: Controller) extends Reactor {
           case 4 => {
             createGrid(savedHeight, savedWidth, savedMines)
             status = 0
-            noMineNumber = 2
+            noMineNumber = (savedHeight * savedWidth) - savedMines
           }
           case _  => {
             createGrid(10, 10, 10)
@@ -109,20 +108,20 @@ class Tui(controller: Controller) extends Reactor {
         if (status == 0) {
           val vec = input.split(' ')
           if (vec.length != 2 && vec.length != 3) {
-            println("Wrong number of arguments")
+            println("Wrong Number of Arguments")
             return
-          } else if(vec.length == 2) {
+          } else if (vec.length == 2) {
             var row = vec(0).toString.toInt
             var col = vec(1).toString.toInt
             controller.setChecked(row - 1, col - 1, false, true)
           } else {
-              if (vec(0).toString.equals("f")) {
-                var row = vec(1).toString.toInt
-                var col = vec(2).toString.toInt
-                controller.setFlag(row - 1, col - 1)
-              } else {
-                println("Please use f")
-              }
+            if (vec(0).toString.equals("f")) {
+              var row = vec(1).toString.toInt
+              var col = vec(2).toString.toInt
+              controller.setFlag(row - 1, col - 1)
+            } else {
+              println("Please use f to set a flag")
+            }
           }
         }
       }

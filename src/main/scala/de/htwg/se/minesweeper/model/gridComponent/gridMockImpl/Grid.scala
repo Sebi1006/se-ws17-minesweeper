@@ -1,8 +1,7 @@
 package de.htwg.se.minesweeper.model.gridMockImpl
 
-import java.awt.Color
-
 import de.htwg.se.minesweeper.model.gridComponent.{CellInterface, GridInterface}
+import java.awt.Color
 
 class Grid(var height: Int, var width: Int, var numMines: Int) extends GridInterface {
 
@@ -11,24 +10,18 @@ class Grid(var height: Int, var width: Int, var numMines: Int) extends GridInter
   numMines = 10
 
   def cell(row: Int, col: Int): CellInterface = EmptyCell
-
   def setMines(rowUsed: Int, colUsed: Int): Unit = {}
-
   def setValues(): Unit = {}
-
   def getRow(i: Int): Int = 0
-
   def getCol(i: Int): Int = 0
-
   def getHeight(): Int = 0
-
   def getWidth(): Int = 0
-
   def getNumMines(): Int = 0
 
 }
 
 object EmptyCell extends CellInterface {
+
   var checked: Boolean = false
   var value: Int = 0
   var color: Int = 'w'
@@ -36,22 +29,14 @@ object EmptyCell extends CellInterface {
   var flag: Boolean = false
 
   def setValue(value: Int): Unit = {}
-
   def getValue(): Int = 0
-
   def setChecked(checked: Boolean): Unit = {}
-
   def getChecked(): Boolean = false
-
   def setColor(color: Int): Unit = {}
-
   def getColor(): Int = 0
-
   def setColorBack(color: Color): Unit = {}
-
   def getColorBack(): Color = null
-
   def setFlag(): Unit = {}
-
   def getFlag(): Boolean = false
+
 }

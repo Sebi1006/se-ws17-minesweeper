@@ -1,13 +1,11 @@
 package de.htwg.se.minesweeper.aview.gui
 
 import de.htwg.se.minesweeper.controller.{CellChanged, GridSizeChanged, Winner}
+import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
 import java.awt._
 import java.awt.Dimension
-import javax.swing._
 import java.awt.event._
-
-import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
-
+import javax.swing._
 import scala.swing.Frame
 
 class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
@@ -37,8 +35,6 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
   setIc()
   controller.createGrid(10, 10, 10)
   setPanel(10, 10)
-
-
   var guiReactor = new GuiReactor(controller)
 
   def setMenu(): Unit = {
@@ -121,13 +117,13 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         System.exit(0)
       }
     })
-    undo.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent): Unit = {
+    undo.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
         controller.undo
       }
     })
-    redo.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent): Unit = {
+    redo.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
         controller.redo
       }
     })
@@ -211,6 +207,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         setPanel(savedHeight, savedWidth)
       } catch {
         case ex: Exception =>
+		  sw.stop()
           controller.createGrid(savedHeight, savedWidth, savedNumMines)
           setPanel(savedHeight, savedWidth)
       }
@@ -240,7 +237,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         var1 = i
         var2 = j
       }
-      if(me.getButton == MouseEvent.BUTTON1) {
+      if (me.getButton == MouseEvent.BUTTON1) {
         controller.setChecked(var1, var2, false, true)
       } else {
         controller.setFlag(var1, var2)
@@ -251,7 +248,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
   }
 
   def winner(win: Boolean): Unit = {
-    if(win) {
+    if (win) {
       for (k <- 0 until controller.height; l <- 0 until controller.width) {
         blocks(k)(l).removeMouseListener(mh)
       }
@@ -285,14 +282,20 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     var name: String = null
     var i: Int = 0
     while (i <= 8) {
-      name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
+      //name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
+      name = "C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
       ic(i) = new ImageIcon(name) { i += 1; i - 1 }
     }
-    ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
-    ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
-    ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
-    ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
-    ic(13) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\win.png")
+    //ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
+    //ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
+    //ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
+    //ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
+    //ic(13) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\win.png")
+    ic(9) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
+    ic(10) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
+    ic(11) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
+    ic(12) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
+    ic(13) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\win.png")
   }
 
   def paint(): Unit = {
@@ -306,7 +309,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         } else {
           blocks(i)(j).setIcon(ic(controller.getValue(i, j)))
         }
-      } else if(controller.getFlag(i, j)){
+      } else if (controller.getFlag(i, j)) {
         blocks(i)(j).setIcon(ic(10))
       } else {
         blocks(i)(j).setIcon(null)
@@ -405,14 +408,14 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
           i1 = java.lang.Integer.parseInt(tf1.getText)
           i2 = java.lang.Integer.parseInt(tf2.getText)
           i3 = java.lang.Integer.parseInt(tf3.getText)
-          if(i3 >= i1 * i2) {
-            JOptionPane.showMessageDialog(this, "Mine Number must be smaller than grid size")
+          if (i3 >= i1 * i2) {
+            JOptionPane.showMessageDialog(this, "Number of Mines must be smaller than grid size")
             return
           } else if (i1 < 10 || i2 < 10 || i3 < 10) {
-            JOptionPane.showMessageDialog(this, "Height, Width and Mines must be min 10")
+            JOptionPane.showMessageDialog(this, "Height, Width and Number of Mines must be minimum 10")
             return
-          } else if(i1 > 35 || i2 > 35) {
-            JOptionPane.showMessageDialog(this, "Height and width may not exceed 35")
+          } else if (i1 > 35 || i2 > 35) {
+            JOptionPane.showMessageDialog(this, "Height and Width may not exceed 35")
             return
           }
           controller.createGrid(i1, i2, i3)
@@ -439,8 +442,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
   }
 
   class GuiReactor(controller: Controller) extends Frame {
-    var startTime = false
 
+    var startTime = false
     listenTo(controller)
 
     reactions += {
@@ -462,12 +465,13 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     }
 
     def repaintGrid(): Unit = {
-      if (startTimeBool == false) {
+      if (!startTimeBool) {
         sw.start()
         startTimeBool = true
       }
       updateTextfield()
     }
+
   }
 
 }
