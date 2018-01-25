@@ -39,12 +39,12 @@ class TuiSpec  extends WordSpec with Matchers{
     "set a cell on input '2 2'" in {
       var input = "2 2"
       tui.processInputLine(input)
-      controller.grid.cell(2,2).getChecked() should be(true)
+      controller.grid.cell(1,1).getChecked() should be(true)
     }
     "set flag on input 'f 2 3'" in {
       var input = "f 2 3"
       tui.processInputLine(input)
-      controller.grid.cell(2,3).getFlag() should be(true)
+      controller.grid.cell(1,2).getFlag() should be(true)
     }
     "create a new minesweeper on input 'new'" in {
       tui.processInputLine("new\n")

@@ -1,5 +1,7 @@
 package de.htwg.se.minesweeper.model.fileIoComponent.fileIoJsonImpl
 
+import java.awt.Color
+
 import net.codingwell.scalaguice.InjectorExtensions._
 import com.google.inject.Guice
 import de.htwg.se.minesweeper.MineSweeperModule
@@ -20,10 +22,11 @@ class FileIO extends FileIOInterface {
     val numMines = (json \ "grid" \ "numMines").get.toString.toInt
     val injector = Guice.createInjector(new MineSweeperModule)
     grid = injector.instance[GridFactory].create()
+    grid.init(height, width, numMines)
     for (i <- 1 until height + 1; j <- 1 until width + 1) {
       val row = (json \\ "row") (i - 1).as[Int]
       val col = (json \\ "col") (j - 1).as[Int]
-      val cell = (json \\ "cell") ((i * j) - 1 + (i - 1) * height)
+      val cell = (json \\ "cell") (j - 1 + ((i - 1) * width))
       val value = (cell \ "value").as[Int]
       grid.cell(row, col).setValue(value)
       val checked = (cell \ "checked").as[Boolean]
@@ -32,8 +35,7 @@ class FileIO extends FileIOInterface {
       grid.cell(row, col).setFlag(flag)
       val color = (cell \ "color").as[Int]
       grid.cell(row, col).setColor(color)
-      //val colorBack = (cell \ "colorBack").as[Color]
-      //grid.cell(row, col).setColorBack(colorBack)
+      if(checked) { grid.cell(row, col).setColorBack(Color.LIGHT_GRAY)}
     }
     grid
   }
@@ -59,6 +61,7 @@ class FileIO extends FileIOInterface {
       "grid" -> Json.obj(
         "height" -> JsNumber(grid.getHeight()),
         "width" -> JsNumber(grid.getWidth()),
+        "numMines" -> JsNumber(grid.getNumMines()),
         "cells" -> Json.toJson(
           for {row <- 0 until grid.getHeight();
                col <- 0 until grid.getWidth()} yield {

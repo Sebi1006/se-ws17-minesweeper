@@ -25,6 +25,8 @@ class Tui(controller: ControllerInterface) extends Reactor {
         println("Type 4 for Custom")
         println("Type f to set a flag")
         println("Type s to solve")
+        println("Type save to save")
+        println("Type load to load")
         println("Type exit for Exit")
         println("Type new for New Game")
       }
@@ -107,6 +109,12 @@ class Tui(controller: ControllerInterface) extends Reactor {
       }
       case "s" => {
         controller.solve()
+      }
+      case "save" => {
+        controller.save()
+      }
+      case "load" => {
+        controller.load()
       }
       case _ => {
         if (status == 0) {

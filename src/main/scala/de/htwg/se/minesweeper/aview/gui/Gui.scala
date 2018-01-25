@@ -39,13 +39,16 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
 
   def setMenu(): Unit = {
     val bar: JMenuBar = new JMenuBar()
-    val game: JMenu = new JMenu("Game")
+    val file: JMenu = new JMenu("File")
     val menuitem: JMenuItem = new JMenuItem("New Game")
+    val save: JMenuItem = new JMenuItem("Save")
+    val load: JMenuItem = new JMenuItem("Load")
+    val exit: JMenuItem = new JMenuItem("Exit")
+    val game: JMenu = new JMenu("Game")
     val beginner: JCheckBoxMenuItem = new JCheckBoxMenuItem("Beginner")
     val intermediate: JCheckBoxMenuItem = new JCheckBoxMenuItem("Intermediate")
     val expert: JCheckBoxMenuItem = new JCheckBoxMenuItem("Expert")
     val custom: JCheckBoxMenuItem = new JCheckBoxMenuItem("Custom...")
-    val exit: JMenuItem = new JMenuItem("Exit")
     val edit: JMenu = new JMenu("Edit")
     val undo: JMenuItem = new JMenuItem("Undo")
     val redo: JMenuItem = new JMenuItem("Redo")
@@ -133,19 +136,32 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
         controller.solve
       }
     })
+    save.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        controller.save
+      }
+    })
+    load.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        controller.load
+      }
+    })
     setJMenuBar(bar)
+    file.add(menuitem)
+    file.addSeparator()
+    file.add(save)
+    file.add(load)
+    file.addSeparator()
+    file.add(exit)
+    bar.add(file)
     status.add(beginner)
     status.add(intermediate)
     status.add(expert)
     status.add(custom)
-    game.add(menuitem)
-    game.addSeparator()
     game.add(beginner)
     game.add(intermediate)
     game.add(expert)
     game.add(custom)
-    game.addSeparator()
-    game.add(exit)
     bar.add(game)
     edit.add(undo)
     edit.add(redo)
