@@ -28,6 +28,7 @@ trait ControllerInterface extends Publisher {
   def winner(row: Int, col: Int, undo: Boolean): Unit
   def undo(): Unit
   def redo(): Unit
+  def solve(): Unit
 
 }
 

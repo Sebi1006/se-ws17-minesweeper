@@ -12,6 +12,7 @@ trait GridInterface {
   def getHeight(): Int
   def getWidth(): Int
   def getNumMines(): Int
+  def solve(): Unit
 
 }
 

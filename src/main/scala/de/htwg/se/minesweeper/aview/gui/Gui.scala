@@ -49,6 +49,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     val edit: JMenu = new JMenu("Edit")
     val undo: JMenuItem = new JMenuItem("Undo")
     val redo: JMenuItem = new JMenuItem("Redo")
+    val solve: JMenuItem = new JMenuItem("Solve")
     val status: ButtonGroup = new ButtonGroup()
     menuitem.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
@@ -127,6 +128,11 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
         controller.redo
       }
     })
+    solve.addActionListener(new ActionListener() {
+      def actionPerformed(e: ActionEvent): Unit = {
+        controller.solve
+      }
+    })
     setJMenuBar(bar)
     status.add(beginner)
     status.add(intermediate)
@@ -143,6 +149,8 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
     bar.add(game)
     edit.add(undo)
     edit.add(redo)
+    edit.addSeparator()
+    edit.add(solve)
     bar.add(edit)
   }
 

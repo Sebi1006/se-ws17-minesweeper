@@ -29,5 +29,6 @@ class Controller(var grid: GridInterface) extends ControllerInterface {
   def winner(row: Int, col: Int, undo: Boolean): Unit = {}
   def undo(): Unit = {}
   def redo(): Unit = {}
+  def solve(): Unit = {}
 
 }

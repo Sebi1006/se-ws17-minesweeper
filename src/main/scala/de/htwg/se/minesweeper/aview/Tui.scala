@@ -24,6 +24,7 @@ class Tui(controller: Controller) extends Reactor {
         println("Type 3 for Expert")
         println("Type 4 for Custom")
         println("Type f to set a flag")
+        println("Type s to solve")
         println("Type exit for Exit")
         println("Type new for New Game")
       }
@@ -103,6 +104,9 @@ class Tui(controller: Controller) extends Reactor {
           }
         }
         controller.createGrid(10, 10, 10)
+      }
+      case "s" => {
+        controller.solve()
       }
       case _ => {
         if (status == 0) {

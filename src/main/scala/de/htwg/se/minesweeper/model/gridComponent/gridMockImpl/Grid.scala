@@ -17,6 +17,7 @@ class Grid(var height: Int, var width: Int, var numMines: Int) extends GridInter
   def getHeight(): Int = 0
   def getWidth(): Int = 0
   def getNumMines(): Int = 0
+  def solve(): Unit = {}
 
 }
 

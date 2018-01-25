@@ -150,4 +150,9 @@ class Controller(var grid: GridInterface) extends ControllerInterface with Publi
     publish(new CellChanged())
   }
 
+  def solve(): Unit = {
+    grid.solve
+    publish(new CellChanged())
+  }
+
 }

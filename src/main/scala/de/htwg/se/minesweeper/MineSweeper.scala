@@ -8,7 +8,6 @@ import scala.io.StdIn.readLine
 
 object MineSweeper {
 
-  println("1")
   val controller = new Controller(new Grid(10, 10, 10))
   val tui = new Tui(controller)
   val gui = new Gui(controller)

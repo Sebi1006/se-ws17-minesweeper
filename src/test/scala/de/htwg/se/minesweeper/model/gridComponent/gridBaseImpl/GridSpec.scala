@@ -1,5 +1,7 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
+import java.awt.Color
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -21,11 +23,11 @@ class GridSpec extends WordSpec with Matchers {
       val normalGrid = new Grid(16, 16, 16)
       val awkwardGrid = new Grid(10, 14, 22)
       "give access to its Cells" in {
-        tinygrid.cell(0, 0) should be(Cell(false, 0, 'w', null, false))
-        smallGrid.cell(0, 0) should be(Cell(false, 0, 'w', null, false))
-        smallGrid.cell(0, 1) should be(Cell(false, 0, 'w', null, false))
-        smallGrid.cell(1, 0) should be(Cell(false, 0, 'w', null, false))
-        smallGrid.cell(1, 1) should be(Cell(false, 0, 'w', null, false))
+        tinygrid.cell(0, 0) should be(Cell(false, 0, 'w', new Color(255, 255, 255), false))
+        smallGrid.cell(0, 0) should be(Cell(false, 0, 'w', new Color(255, 255, 255), false))
+        smallGrid.cell(0, 1) should be(Cell(false, 0, 'w', new Color(255, 255, 255), false))
+        smallGrid.cell(1, 0) should be(Cell(false, 0, 'w', new Color(255, 255, 255), false))
+        smallGrid.cell(1, 1) should be(Cell(false, 0, 'w', new Color(255, 255, 255), false))
       }
       "allow to set individual Cells and remain immutable" in {
         smallGrid.cell(0, 0).setChecked(true)
@@ -37,9 +39,9 @@ class GridSpec extends WordSpec with Matchers {
       "have the right values in the right places" in {
         tinyGrid.cell(0, 0).setChecked(true)
         tinyGrid.cell(0, 0) should be(Cell(true, 2, 'w', null, false))
-        tinyGrid.cell(0, 1) should be(Cell(false, tinyGrid.cell(0, 1).getValue(), 'w', null, false))
-        tinyGrid.cell(1, 0) should be(Cell(false, tinyGrid.cell(0, 1).getValue(), 'w', null, false))
-        tinyGrid.cell(1, 1) should be(Cell(false, tinyGrid.cell(0, 1).getValue(), 'w', null, false))
+        tinyGrid.cell(0, 1) should be(Cell(false, tinyGrid.cell(0, 1).getValue(), 'w', new Color(255, 255, 255), false))
+        tinyGrid.cell(1, 0) should be(Cell(false, tinyGrid.cell(0, 1).getValue(), 'w', new Color(255, 255, 255), false))
+        tinyGrid.cell(1, 1) should be(Cell(false, tinyGrid.cell(0, 1).getValue(), 'w', new Color(255, 255, 255), false))
       }
     }
   }

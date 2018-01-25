@@ -1,5 +1,7 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
+import java.awt.Color
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -9,7 +11,7 @@ class CellSpec extends WordSpec with Matchers {
 
   "A Cell" when {
     "not set to any value " should {
-      val emptyCell = Cell(false, 0, 'w', null, false)
+      val emptyCell = Cell(false, 0, 'w', new Color(255, 255, 255), false)
       "have value 0" in {
         emptyCell.value should be(0)
       }
@@ -18,7 +20,7 @@ class CellSpec extends WordSpec with Matchers {
       }
     }
     "set to a specific value" should {
-      val nonEmptyCell = Cell(false, 5, 'w', null, false)
+      val nonEmptyCell = Cell(false, 5, 'w', new Color(255, 255, 255), false)
       "return that value" in {
         nonEmptyCell.getValue() should be(5)
       }
