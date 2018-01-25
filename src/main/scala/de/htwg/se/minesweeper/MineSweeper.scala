@@ -11,10 +11,8 @@ import scala.io.StdIn.readLine
 
 object MineSweeper {
 
-  val defaultsize = 10
-
   var controller = Guice.createInjector(new MineSweeperModule).instance[ControllerFactory].create(
-    new Grid(defaultsize, defaultsize, defaultsize))
+    new Grid())
 
   // val controller = new Controller(new Grid(10, 10, 10))
   val tui = new Tui(controller)

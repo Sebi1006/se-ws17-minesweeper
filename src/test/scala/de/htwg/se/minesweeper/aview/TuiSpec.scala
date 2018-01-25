@@ -10,25 +10,31 @@ import org.scalatest.junit.JUnitRunner
 class TuiSpec  extends WordSpec with Matchers{
 
   "A Sudoku Tui" should {
-    val controller = new Controller(new Grid(10, 10, 10))
+    var g = new Grid()
+    g.init(10,10,10)
+    val controller = new Controller(g)
     val tui = new Tui(controller)
     "create an empty minesweeper on input '1'" in {
       tui.processInputLine("1\n")
-      controller.grid should be(new Grid(10, 10, 10))
+      g.init(10,10,10)
+      controller.grid should be(g)
     }
     "create an empty minesweeper on input '2'" in {
       tui.processInputLine("2\n")
-      controller.grid should be(new Grid(16, 16, 70))
+      g.init(16,16,70)
+      controller.grid should be(g)
     }
     "create an empty minesweeper on input '3'" in {
       tui.processInputLine("3\n")
-      controller.grid should be(new Grid(20, 20, 150))
+      g.init(20,20,150)
+      controller.grid should be(g)
     }
     "create an empty minesweeper on input '4'" in {
       tui.processInputLine("4\n")
       var input = "10 20 20\n"
       tui.processInputLine(input)
-      controller.grid should be(new Grid(10, 20, 20))
+      g.init(10,20,20)
+      controller.grid should be(g)
     }
     "set a cell on input '2 2'" in {
       tui.processInputLine("2 2\n")
@@ -40,7 +46,8 @@ class TuiSpec  extends WordSpec with Matchers{
     }
     "create a new minesweeper on input 'new'" in {
       tui.processInputLine("new\n")
-      controller.grid should be(new Grid(10, 20, 20))
+      g.init(10, 10, 10)
+      controller.grid should be(g)
     }
     /*"solve a Sudoku on input 's'" in {
       tui.processInputLine("n")

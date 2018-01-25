@@ -7,7 +7,7 @@ import java.awt.Color
 
 class Controller(var grid: GridInterface) extends ControllerInterface {
 
-  grid = new Grid(10, 10, 10)
+  grid = new Grid()
   var noMineCount: Int = 90
   var mineFound: Int = 0
   var flag: Boolean = true

@@ -22,7 +22,8 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   private val undoManager = new UndoManager
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
-    grid = injector.instance[GridFactory].create(grid.getHeight(), grid.getWidth(), grid.getNumMines())
+    grid = injector.instance[GridFactory].create()
+    grid.init(height, width, numMines)
     noMineCount = (height * width) - numMines
     mineFound = numMines
     flag = true

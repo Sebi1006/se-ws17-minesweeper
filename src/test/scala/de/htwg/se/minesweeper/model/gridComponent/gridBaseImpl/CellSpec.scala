@@ -11,7 +11,8 @@ class CellSpec extends WordSpec with Matchers {
 
   "A Cell" when {
     "not set to any value " should {
-      val emptyCell = new Cell(false, 0, 'w', new Color(255, 255, 255), false)
+      val emptyCell = new Cell()
+      emptyCell.init(false, 0, 'w', new Color(255, 255, 255), false)
       "have value 0" in {
         emptyCell.value should be(0)
       }
@@ -20,7 +21,8 @@ class CellSpec extends WordSpec with Matchers {
       }
     }
     "set to a specific value" should {
-      val nonEmptyCell = new Cell(true, 5, 'w', new Color(255, 255, 255), false)
+      val nonEmptyCell = new Cell()
+      nonEmptyCell.init(false, 0, 'w', new Color(255, 255, 255), false)
       "return that value" in {
         nonEmptyCell.getValue() should be(5)
       }

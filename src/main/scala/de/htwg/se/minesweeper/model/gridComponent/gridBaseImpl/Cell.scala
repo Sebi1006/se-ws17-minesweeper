@@ -4,9 +4,21 @@ import com.google.inject.assistedinject.{Assisted, AssistedInject}
 import de.htwg.se.minesweeper.model.gridComponent.CellInterface
 import java.awt.Color
 
-class Cell @AssistedInject() (@Assisted var checked: Boolean, @Assisted var value: Int,
-                                   @Assisted var color: Int, @Assisted var colorBack: Color,
-                                   @Assisted var flag: Boolean) extends CellInterface {
+class Cell @AssistedInject() () extends CellInterface {
+
+  var checked = false
+  var value = 0
+  var color: Int = 'w'
+  var colorBack: Color = null
+  var flag = false
+
+  def init(checked: Boolean, value: Int, color: Int, colorBack: Color, flag: Boolean): Unit = {
+    setChecked(checked)
+    setValue(value)
+    setColor(color)
+    setColorBack(colorBack)
+    setFlag(flag)
+  }
 
   def setValue(value: Int): Unit = {
     this.value = value

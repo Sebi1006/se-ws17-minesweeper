@@ -4,11 +4,22 @@ import com.google.inject.assistedinject.{Assisted, AssistedInject}
 import de.htwg.se.minesweeper.model.gridComponent.{CellInterface, GridInterface}
 import scala.util.Random
 
-case class Grid @AssistedInject() (@Assisted height: Int, @Assisted width: Int, @Assisted numMines: Int) extends GridInterface {
+case class Grid @AssistedInject() () extends GridInterface {
 
-  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w', null, false) }
+  var height: Int = 10
+  var width: Int = 10
+  var numMines: Int = 10
+  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell() }
   var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
   var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
+
+
+  def init(height: Int, width: Int, numMines: Int): Unit = {
+    this.height = height
+    this.width = width
+    this.numMines = numMines
+    matrix = Vector.tabulate(height, width) { (row, col) => new Cell() }
+  }
 
   def cell(row: Int, col: Int): Cell = {
     matrix(row)(col)

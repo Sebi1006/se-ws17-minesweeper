@@ -12,7 +12,8 @@ class ControllerSpec extends WordSpec with Matchers {
 
   "A Controller" when {
     "empty" should {
-      val smallGrid = new Grid(10, 10, 10)
+      var g = new Grid()
+      val smallGrid = g
       val controller = new Controller(smallGrid)
       "handle undo/redo of solving a grid correctly" in {
         controller.grid.cell(0, 0).getChecked() should be(false)
