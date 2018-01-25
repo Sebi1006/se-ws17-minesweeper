@@ -1,22 +1,28 @@
 package de.htwg.se.minesweeper.controller.controllerBaseImpl
 
+import com.google.inject.assistedinject.{Assisted, AssistedInject}
+import net.codingwell.scalaguice.InjectorExtensions._
+import com.google.inject.Guice
 import de.htwg.se.minesweeper.controller.{CellChanged, ControllerInterface, GridSizeChanged, Winner}
-import de.htwg.se.minesweeper.model.gridComponent.GridInterface
-import de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl.Grid
+import de.htwg.se.minesweeper.model.gridComponent.{GridFactory, GridInterface}
 import de.htwg.se.minesweeper.util.UndoManager
 import java.awt._
+
+import de.htwg.se.minesweeper.MineSweeperModule
+
 import scala.swing.Publisher
 
-class Controller(var grid: GridInterface) extends ControllerInterface with Publisher {
+class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends ControllerInterface with Publisher {
 
   publish(new GridSizeChanged(grid.getHeight, grid.getWidth, grid.getNumMines))
+  val injector = Guice.createInjector(new MineSweeperModule)
   var noMineCount: Int = (grid.getHeight * grid.getWidth) - grid.getNumMines
   var mineFound: Int = 0
   var flag: Boolean = true
   private val undoManager = new UndoManager
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
-    grid = new Grid(height, width, numMines)
+    grid = injector.instance[GridFactory].create(grid.getHeight(), grid.getWidth(), grid.getNumMines())
     noMineCount = (height * width) - numMines
     mineFound = numMines
     flag = true
@@ -89,8 +95,8 @@ class Controller(var grid: GridInterface) extends ControllerInterface with Publi
     grid.cell(row, col).getColorBack()
   }
 
-  def setFlag(row: Int, col: Int): Unit = {
-    grid.cell(row, col).setFlag()
+  def setFlag(row: Int, col: Int, undo: Boolean): Unit = {
+    grid.cell(row, col).setFlag(!undo)
     mineFound -= 1
     publish(new CellChanged())
   }

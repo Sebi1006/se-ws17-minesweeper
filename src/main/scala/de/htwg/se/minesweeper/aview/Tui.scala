@@ -1,11 +1,11 @@
 package de.htwg.se.minesweeper.aview
 
-import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
-import de.htwg.se.minesweeper.controller.{CellChanged, GridSizeChanged, Winner}
+import de.htwg.se.minesweeper.controller.{CellChanged, ControllerInterface, GridSizeChanged, Winner}
+
 import scala.swing.Reactor
 import scala.io.StdIn.readLine
 
-class Tui(controller: Controller) extends Reactor {
+class Tui(controller: ControllerInterface) extends Reactor {
 
   listenTo(controller)
   println("Type h for Help")
@@ -122,7 +122,7 @@ class Tui(controller: Controller) extends Reactor {
             if (vec(0).toString.equals("f")) {
               var row = vec(1).toString.toInt
               var col = vec(2).toString.toInt
-              controller.setFlag(row - 1, col - 1)
+              controller.setFlag(row - 1, col - 1, false)
             } else {
               println("Please use f to set a flag")
             }

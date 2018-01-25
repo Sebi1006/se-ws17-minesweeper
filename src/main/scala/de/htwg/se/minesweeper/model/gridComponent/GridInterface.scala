@@ -14,15 +14,14 @@ trait GridInterface {
   def getNumMines(): Int
   def solve(): Unit
 
+
+}
+
+trait GridFactory {
+  def create(height: Int, width: Int, numMines: Int): GridInterface
 }
 
 trait CellInterface {
-
-  var checked: Boolean
-  var value: Int
-  var color: Int
-  var colorBack: Color
-  var flag: Boolean
 
   def setValue(value: Int): Unit
   def getValue(): Int
@@ -32,7 +31,11 @@ trait CellInterface {
   def getColor(): Int
   def setColorBack(color: Color): Unit
   def getColorBack(): Color
-  def setFlag(): Unit
+  def setFlag(undo: Boolean): Unit
   def getFlag(): Boolean
 
+}
+
+trait CellFactory {
+  def create(checked: Boolean, value: Int, color: Int, colorBack: Color, flag: Boolean): CellInterface
 }

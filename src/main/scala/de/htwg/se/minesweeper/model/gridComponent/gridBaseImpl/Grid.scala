@@ -1,10 +1,10 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
+import com.google.inject.assistedinject.{Assisted, AssistedInject}
 import de.htwg.se.minesweeper.model.gridComponent.{CellInterface, GridInterface}
-import java.awt.Color
 import scala.util.Random
 
-case class Grid(height: Int, width: Int, numMines: Int) extends GridInterface {
+case class Grid @AssistedInject() (@Assisted height: Int, @Assisted width: Int, @Assisted numMines: Int) extends GridInterface {
 
   var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell(false, 0, 'w', null, false) }
   var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)

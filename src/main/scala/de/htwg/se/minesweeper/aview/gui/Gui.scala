@@ -1,14 +1,14 @@
 package de.htwg.se.minesweeper.aview.gui
 
-import de.htwg.se.minesweeper.controller.{CellChanged, GridSizeChanged, Winner}
-import de.htwg.se.minesweeper.controller.controllerBaseImpl.Controller
+import de.htwg.se.minesweeper.controller.{CellChanged, ControllerInterface, GridSizeChanged, Winner}
 import java.awt._
 import java.awt.Dimension
 import java.awt.event._
 import javax.swing._
+
 import scala.swing.Frame
 
-class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
+class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
 
   var fwidth: Int = _
   var fheight: Int = _
@@ -248,7 +248,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
       if (me.getButton == MouseEvent.BUTTON1) {
         controller.setChecked(var1, var2, false, true)
       } else {
-        controller.setFlag(var1, var2)
+        controller.setFlag(var1, var2, false)
       }
 
     }
@@ -443,7 +443,7 @@ class Gui(controller: Controller) extends JFrame("HTWG Minesweeper") with Action
 
   }
 
-  class GuiReactor(controller: Controller) extends Frame {
+  class GuiReactor(controller: ControllerInterface) extends Frame {
 
     var startTime = false
     listenTo(controller)

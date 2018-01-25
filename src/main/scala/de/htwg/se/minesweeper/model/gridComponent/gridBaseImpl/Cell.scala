@@ -1,9 +1,12 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
+import com.google.inject.assistedinject.{Assisted, AssistedInject}
 import de.htwg.se.minesweeper.model.gridComponent.CellInterface
 import java.awt.Color
 
-case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorBack: Color, var flag: Boolean) extends CellInterface {
+class Cell @AssistedInject() (@Assisted var checked: Boolean, @Assisted var value: Int,
+                                   @Assisted var color: Int, @Assisted var colorBack: Color,
+                                   @Assisted var flag: Boolean) extends CellInterface {
 
   def setValue(value: Int): Unit = {
     this.value = value
@@ -29,8 +32,8 @@ case class Cell(var checked: Boolean, var value: Int, var color: Int, var colorB
 
   def getColorBack(): Color = colorBack
 
-  def setFlag(): Unit = {
-    this.flag = true
+  def setFlag(flag: Boolean): Unit = {
+    this.flag = flag
   }
 
   def getFlag(): Boolean = flag

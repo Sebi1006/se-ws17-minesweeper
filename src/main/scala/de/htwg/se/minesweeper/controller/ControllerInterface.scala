@@ -22,7 +22,7 @@ trait ControllerInterface extends Publisher {
   def width(): Int
   def setColorBack(row: Int, col: Int, color: Color): Unit
   def getColorBack(row: Int, col: Int): Color
-  def setFlag(row: Int, col: Int): Unit
+  def setFlag(row: Int, col: Int, undo: Boolean): Unit
   def getFlag(row: Int, col: Int): Boolean
   def depthFirstSearch(rowD: Int, colD: Int): Unit
   def winner(row: Int, col: Int, undo: Boolean): Unit
@@ -30,6 +30,10 @@ trait ControllerInterface extends Publisher {
   def redo(): Unit
   def solve(): Unit
 
+}
+
+trait ControllerFactory {
+  def create(grid: GridInterface): ControllerInterface
 }
 
 import scala.swing.event.Event

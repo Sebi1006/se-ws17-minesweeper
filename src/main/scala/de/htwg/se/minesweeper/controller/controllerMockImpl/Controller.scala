@@ -23,7 +23,7 @@ class Controller(var grid: GridInterface) extends ControllerInterface {
   def width(): Int = 10
   def setColorBack(row: Int, col: Int, color: Color): Unit = {}
   def getColorBack(row: Int, col: Int): Color = null
-  def setFlag(row: Int, col: Int): Unit = {}
+  def setFlag(row: Int, col: Int, undo: Boolean): Unit = {}
   def getFlag(row: Int, col: Int): Boolean = false
   def depthFirstSearch(rowD: Int, colD: Int): Unit = {}
   def winner(row: Int, col: Int, undo: Boolean): Unit = {}

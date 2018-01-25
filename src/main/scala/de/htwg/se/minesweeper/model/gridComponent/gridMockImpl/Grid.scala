@@ -23,12 +23,6 @@ class Grid(var height: Int, var width: Int, var numMines: Int) extends GridInter
 
 object EmptyCell extends CellInterface {
 
-  var checked: Boolean = false
-  var value: Int = 0
-  var color: Int = 'w'
-  var colorBack: Color = null
-  var flag: Boolean = false
-
   def setValue(value: Int): Unit = {}
   def getValue(): Int = 0
   def setChecked(checked: Boolean): Unit = {}
@@ -37,7 +31,7 @@ object EmptyCell extends CellInterface {
   def getColor(): Int = 0
   def setColorBack(color: Color): Unit = {}
   def getColorBack(): Color = null
-  def setFlag(): Unit = {}
+  def setFlag(flag: Boolean): Unit = {}
   def getFlag(): Boolean = false
 
 }
