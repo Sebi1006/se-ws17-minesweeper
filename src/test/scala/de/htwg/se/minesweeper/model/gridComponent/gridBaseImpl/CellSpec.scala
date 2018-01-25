@@ -22,7 +22,7 @@ class CellSpec extends WordSpec with Matchers {
     }
     "set to a specific value" should {
       val nonEmptyCell = new Cell()
-      nonEmptyCell.init(false, 0, 'w', new Color(255, 255, 255), false)
+      nonEmptyCell.init(true, 5, 'w', new Color(255, 255, 255), false)
       "return that value" in {
         nonEmptyCell.getValue() should be(5)
       }

@@ -31,8 +31,8 @@ class TuiSpec  extends WordSpec with Matchers{
     }
     "create an empty minesweeper on input '4'" in {
       tui.processInputLine("4\n")
-      var input = "10 20 20\n"
-      tui.processInputLine(input)
+      var input = "10 20 20"
+      tui.processInputLine(input + "\n")
       g.init(10,20,20)
       controller.grid should be(g)
     }
