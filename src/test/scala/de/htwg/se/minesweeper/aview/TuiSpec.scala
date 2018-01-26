@@ -68,6 +68,7 @@ class TuiSpec  extends WordSpec with Matchers{
       tui.processInputLine("1")
       tui.processInputLine("load")
       controller.getChecked(1, 1) should be(true)
+      controller.flag should be(false)
 
     }
     "create an empty minesweeper on input '4'" in {
