@@ -22,7 +22,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.undo
         controller.grid.cell(0, 0).getChecked() should be(false)
         controller.redo
-        controller.grid.cell(0, 0).getChecked() should be(true)
+        controller.grid.cell(0, 0).getChecked() should be(false)
       }
       "create a grid" in {
         controller.createGrid(15, 15, 15)

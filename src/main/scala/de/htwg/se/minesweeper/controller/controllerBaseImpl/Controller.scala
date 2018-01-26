@@ -24,7 +24,6 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   val fileIo = injector.instance[FileIOInterface]
   var intList: List[(Int, Int)] = Nil
   var status = 0
-  var i = 0
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = injector.instance[GridFactory].create()
@@ -85,8 +84,6 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
           }
           publish(new CellChanged())
         }
-        i += 1
-        println(i)
         winner(row, col, undo)
       } else {
         if (!grid.cell(row, col).getChecked()) {
