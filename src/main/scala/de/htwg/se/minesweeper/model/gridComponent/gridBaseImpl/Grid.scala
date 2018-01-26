@@ -111,8 +111,9 @@ case class Grid @AssistedInject() () extends GridInterface {
     box
   }
 
-  def solve: Unit = {
-    new Solver(this)
+  def solve: List[(Int, Int)] = {
+    val s = new Solver(this)
+    s.solve()
   }
 
 }

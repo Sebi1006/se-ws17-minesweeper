@@ -20,9 +20,11 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   var noMineCount: Int = (grid.getHeight * grid.getWidth) - grid.getNumMines
   var mineFound: Int = 0
   var flag: Boolean = true
-  private val undoManager = new UndoManager
+  private var undoManager = new UndoManager
   val fileIo = injector.instance[FileIOInterface]
   var intList: List[(Int, Int)] = Nil
+  var status = 0
+  var i = 0
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = injector.instance[GridFactory].create()
@@ -30,36 +32,46 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
     noMineCount = (height * width) - numMines
     mineFound = numMines
     flag = true
+    undoManager = new UndoManager
+    intList = Nil
     publish(new GridSizeChanged(height, width, numMines))
   }
 
   def setChecked(row: Int, col: Int, undo: Boolean, command: Boolean, dpfs: Boolean): Unit = {
-    if (command) {
-      undoManager.doStep(new SetCommand(row, col, undo, intList, 1, this))
-    }
-    if (!undo) {
-      if (grid.cell(row, col).getChecked) {
-        return
+    if(status == 0 || command) {
+      if (command) {
+        undoManager.doStep(new SetCommand(row, col, undo, intList, 1, this))
       }
-      grid.cell(row, col).setChecked(true)
-      if (flag) {
-        grid.setMines(row, col)
-        grid.setValues()
-        flag = false
+      if (!undo) {
+        if (grid.cell(row, col).getChecked) {
+          return
+        }
+        grid.cell(row, col).setChecked(true)
+        if (flag) {
+          grid.setMines(row, col)
+          grid.setValues()
+          flag = false
+        }
+        if (!dpfs && grid.cell(row, col).getValue() == 0) {
+          println("a")
+          undoManager.undoStep
+          depthFirstSearch(row, col)
+          undoManager.doStep(new SetCommand(0, 0, true, intList, 3, this))
+          publish(new CellChanged())
+        }
+        i += 1
+        println(i)
+        winner(row, col, undo)
+      } else {
+        if (!grid.cell(row, col).getChecked()) {
+          return
+        }
+        grid.cell(row, col).setChecked(false)
+        winner(row, col, undo)
       }
-      if (!dpfs && grid.cell(row, col).getValue() == 0) {
-        intList = (row, col) :: intList
-        depthFirstSearch(row, col)
+      if (!dpfs) {
+        publish(new CellChanged())
       }
-      winner(row, col, undo)
-    } else {
-      if (!grid.cell(row, col).getChecked()) {
-        return
-      }
-      grid.cell(row, col).setChecked(false)
-    }
-    if (!dpfs) {
-      publish(new CellChanged())
     }
   }
 
@@ -122,7 +134,7 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   def depthFirstSearch(rowD: Int, colD: Int): Unit = {
     var R: Int = 0
     var C: Int = 0
-    if(!getChecked(rowD, colD)) {
+    if (!getChecked(rowD, colD)) {
       intList = (rowD, colD) :: intList
     }
     setColor(rowD, colD, 'b')
@@ -144,13 +156,12 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
         }
       }
     }
-    undoManager.doStep(new SetCommand(0, 0, true, intList, 3, this))
-    publish(new CellChanged())
   }
 
   def winner(row: Int, col: Int, undo: Boolean): Unit = {
     if (!undo) {
       if (grid.cell(row, col).getValue() != -1) {
+        status = 0
         noMineCount -= 1
       } else {
         for (i <- 0 until grid.getHeight(); j <- 0 until grid.getWidth()) {
@@ -158,13 +169,22 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
             grid.cell(i, j).setChecked(true)
           }
         }
+        status = 1
         publish(new Winner(false))
       }
       if (noMineCount == 0) {
+        status = 2
         publish(new Winner(true))
       }
     } else {
       if (grid.cell(row, col).getValue() == -1) {
+        status = 0
+        for (i <- 0 until grid.getHeight(); j <- 0 until grid.getWidth()) {
+          if (grid.cell(i, j).getValue() == -1) {
+            grid.cell(i, j).setChecked(false)
+          }
+        }
+      } else {
         noMineCount += 1
       }
       if (noMineCount == 0) {
@@ -184,7 +204,8 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   }
 
   def solve(): Unit = {
-    grid.solve
+    intList = grid.solve
+    undoManager.doStep(new SetCommand(0, 0, true, intList, 4, this))
     publish(new CellChanged())
   }
 

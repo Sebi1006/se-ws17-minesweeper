@@ -1,5 +1,6 @@
 package de.htwg.se.minesweeper.controller.controllerBaseImpl
 
+import de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl.Solver
 import de.htwg.se.minesweeper.util.Command
 
 class SetCommand(row: Int, col: Int, undo: Boolean, group: List[(Int, Int)], typ: Int, controller: Controller) extends Command {
@@ -18,13 +19,15 @@ class SetCommand(row: Int, col: Int, undo: Boolean, group: List[(Int, Int)], typ
   }
   override def redoStep: Unit = {
     if(typ == 1) {
-      controller.setChecked(row, col, true, false, false)
+      controller.setChecked(row, col, false, false, false)
     } else if(typ == 2) {
       controller.setFlag(row, col, undo, false)
-    } else {
+    } else if(typ == 3) {
       for (i <- 0 until group.length) {
-        controller.setChecked(group(i)._1, group(i)._2, !undo, false, true)
+        controller.setChecked(group(i)._1, group(i)._2, false, false, true)
       }
+    } else {
+      return
     }
   }
 

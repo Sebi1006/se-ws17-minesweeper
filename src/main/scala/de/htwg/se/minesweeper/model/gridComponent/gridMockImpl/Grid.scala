@@ -14,7 +14,7 @@ class Grid() extends GridInterface {
   def getHeight(): Int = 0
   def getWidth(): Int = 0
   def getNumMines(): Int = 0
-  def solve(): Unit = {}
+  def solve(): List[(Int, Int)] = Nil
 
 }
 

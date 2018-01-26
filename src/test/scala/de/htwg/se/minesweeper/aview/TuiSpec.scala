@@ -15,22 +15,22 @@ class TuiSpec  extends WordSpec with Matchers{
     val controller = new Controller(g)
     val tui = new Tui(controller)
     "create an empty minesweeper on input '1'" in {
-      tui.processInputLine("1\n")
+      tui.processInputLine("1")
       g.init(10,10,10)
       controller.grid should be(g)
     }
     "create an empty minesweeper on input '2'" in {
-      tui.processInputLine("2\n")
+      tui.processInputLine("2")
       g.init(16,16,70)
       controller.grid should be(g)
     }
     "create an empty minesweeper on input '3'" in {
-      tui.processInputLine("3\n")
+      tui.processInputLine("3")
       g.init(20,20,150)
       controller.grid should be(g)
     }
     "create an empty minesweeper on input '4'" in {
-      tui.processInputLine("4\n")
+      tui.processInputLine("4")
       var input = "10 20 20"
       tui.processInputLine(input)
       g.init(10,20,20)
@@ -51,11 +51,10 @@ class TuiSpec  extends WordSpec with Matchers{
       g.init(10, 10, 10)
       controller.grid should be(g)
     }
-    /*"solve a Sudoku on input 's'" in {
-      tui.processInputLine("n")
+    "solve a MineSweeper on input 's'" in {
       tui.processInputLine("s")
-      controller.grid.solved should be(true)
-    }*/
+      controller.getChecked(9, 9) should be(true)
+    }
   }
 
 }

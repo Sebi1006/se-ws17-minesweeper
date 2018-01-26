@@ -5,10 +5,19 @@ import java.awt.Color
 import de.htwg.se.minesweeper.model.gridComponent.GridInterface
 
 class Solver(grid: GridInterface) {
-  for (i <- 0 until grid.getHeight(); j <- 0 until grid.getWidth()) {
-    grid.cell(i, j).setChecked(true)
-    grid.cell(i, j).setColor('b')
-    grid.cell(i, j).setColorBack(Color.LIGHT_GRAY)
+
+  var intList: List[(Int, Int)] = Nil
+
+  def solve(): List[(Int, Int)] = {
+    for (i <- 0 until grid.getHeight(); j <- 0 until grid.getWidth()) {
+      if (grid.cell(i, j).getChecked() == false) {
+        intList = (i, j) :: intList
+      }
+      grid.cell(i, j).setChecked(true)
+      grid.cell(i, j).setColor('b')
+      grid.cell(i, j).setColorBack(Color.LIGHT_GRAY)
+    }
+    intList
   }
 
 }
