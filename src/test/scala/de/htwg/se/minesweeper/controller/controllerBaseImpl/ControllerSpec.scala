@@ -27,7 +27,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.undo
         controller.grid.cell(0, 0).getFlag() should be(false)
         controller.redo
-        controller.grid.cell(0, 0).getFlag() should be(true)
+        controller.grid.cell(0, 0).getFlag() should be(false)
         controller.grid.cell(1, 0).setChecked(true)
         controller.undo
         controller.grid.cell(1, 0).getChecked() should be(false)
