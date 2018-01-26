@@ -32,7 +32,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.undo
         controller.grid.cell(1, 0).getChecked() should be(false)
         controller.redo
-        controller.grid.cell(1, 0).getChecked() should be(true)
+        controller.grid.cell(1, 0).getChecked() should be(false)
         var row: Int = 0
         var col: Int = 0
         for (i <- 0 until 10; j <- 0 until 10) {
