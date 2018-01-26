@@ -54,7 +54,7 @@ class TuiSpec  extends WordSpec with Matchers{
       tui.processInputLine(input)
       val inputFalse = "4 2 3"
       tui.processInputLine(inputFalse)
-      controller.grid.cell(1,2).getFlag() should be(true)
+      controller.grid.cell(1,2).getFlag() should be(false)
     }
     "solve a MineSweeper on input 's'" in {
       tui.processInputLine("s")
