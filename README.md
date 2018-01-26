@@ -11,3 +11,16 @@ class Software Engineering at the University of Applied Science HTWG Konstanz
 * Has *ScalaTest* and *ScalaMock* at their latest versions as dependencies.
 * Has *sbt-scalariform*, *sbt-scapegoat*, *scalastyle-sbt-plugin* and *sbt-scoverage* sbt plugins
 * Has .gitignore defaults
+
+Commands to play:
+* h to get help
+* 1 for beginner grid
+* 2 for advanced grid
+* 3 for expert grid
+* 4 for custom grid with paramters in next line (height) (width) (numMines)
+* (row)(col) to set a cell
+* f (row)(col) to flag a cell
+* save to save the grid
+* load to load the last saved grid
+* exit to quit the game
+* new to start a new game with last parameters
