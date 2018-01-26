@@ -37,6 +37,29 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
     publish(new GridSizeChanged(height, width, numMines))
   }
 
+  def createLoadedGrid(height: Int, width: Int, numMines: Int, values: List[Int], checked: List[Boolean], flagList: List[Boolean], color: List[Int]): Unit = {
+    grid = injector.instance[GridFactory].create()
+    grid.init(height, width, numMines)
+    for(i <- 0 until height; j <- 0 until width) {
+      grid.cell(i, j).setValue(values(width -1 - j + (height - 1 - i) * width))
+      grid.cell(i, j).setChecked(checked(width - j - 1 + (height - 1 - i) * width))
+      grid.cell(i, j).setFlag(flagList(width - j - 1 + (height - 1 - i) * width))
+      grid.cell(i, j).setColor(color(width - j - 1 + (height - 1 - i) * width))
+
+    }
+    for(i <- 0 until height; j <- 0 until width) {
+      if (grid.cell(i, j).getChecked()) {
+        grid.cell(i, j).setColorBack(Color.LIGHT_GRAY)
+      }
+    }
+    noMineCount = (height * width) - numMines
+    mineFound = numMines
+    flag = false
+    undoManager = new UndoManager
+    intList = Nil
+    publish(new GridSizeChanged(height, width, numMines))
+  }
+
   def setChecked(row: Int, col: Int, undo: Boolean, command: Boolean, dpfs: Boolean): Unit = {
     if(status == 0 || command) {
       if (command) {
@@ -52,11 +75,14 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
           grid.setValues()
           flag = false
         }
-        if (!dpfs && grid.cell(row, col).getValue() == 0) {
-          println("a")
-          undoManager.undoStep
+        if (grid.cell(row, col).getValue() == 0) {
+          if(!dpfs) {
+            intList = (row, col) :: intList
+          }
           depthFirstSearch(row, col)
-          undoManager.doStep(new SetCommand(0, 0, true, intList, 3, this))
+          if(!dpfs) {
+            undoManager.doStep(new SetCommand(0, 0, true, intList, 3, this))
+          }
           publish(new CellChanged())
         }
         i += 1
@@ -215,7 +241,8 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   }
 
   def load: Unit = {
-    grid = fileIo.load
+    var gridInfo = fileIo.load
+    createLoadedGrid(gridInfo._1, gridInfo._2, gridInfo._3, gridInfo._4, gridInfo._5, gridInfo._6, gridInfo._7)
     publish(new CellChanged)
   }
 

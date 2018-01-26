@@ -1,43 +1,40 @@
 package de.htwg.se.minesweeper.model.fileIoComponent.fileIoJsonImpl
 
-import java.awt.Color
-
-import net.codingwell.scalaguice.InjectorExtensions._
 import com.google.inject.Guice
 import de.htwg.se.minesweeper.MineSweeperModule
 import de.htwg.se.minesweeper.model.fileIoComponent.FileIOInterface
-import de.htwg.se.minesweeper.model.gridComponent.{CellInterface, GridFactory, GridInterface}
+import de.htwg.se.minesweeper.model.gridComponent.{CellInterface, GridInterface}
 import play.api.libs.json._
 
 import scala.io.Source
 
 class FileIO extends FileIOInterface {
 
-  override def load: GridInterface = {
-    var grid: GridInterface = null
+  override def load: (Int, Int, Int, List[Int], List[Boolean], List[Boolean], List[Int]) = {
     val source: String = Source.fromFile("grid.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     val height = (json \ "grid" \ "height").get.toString.toInt
     val width = (json \ "grid" \ "width").get.toString.toInt
     val numMines = (json \ "grid" \ "numMines").get.toString.toInt
     val injector = Guice.createInjector(new MineSweeperModule)
-    grid = injector.instance[GridFactory].create()
-    grid.init(height, width, numMines)
-    for (i <- 1 until height + 1; j <- 1 until width + 1) {
-      val row = (json \\ "row") (i - 1).as[Int]
-      val col = (json \\ "col") (j - 1).as[Int]
-      val cell = (json \\ "cell") (j - 1 + ((i - 1) * width))
+    var listValue: List[Int] = Nil
+    var listChecked: List[Boolean] = Nil
+    var listFlag: List[Boolean] = Nil
+    var listColor: List[Int] = Nil
+    for (i <- 0 until height; j <- 0 until width) {
+      val row = (json \\ "row") (i).as[Int]
+      val col = (json \\ "col") (j).as[Int]
+      val cell = (json \\ "cell") (j + (i * width))
       val value = (cell \ "value").as[Int]
-      grid.cell(row, col).setValue(value)
+      listValue = value :: listValue
       val checked = (cell \ "checked").as[Boolean]
-      grid.cell(row, col).setChecked(checked)
+      listChecked = checked :: listChecked
       val flag = (cell \ "flag").as[Boolean]
-      grid.cell(row, col).setFlag(flag)
+      listFlag = flag :: listFlag
       val color = (cell \ "color").as[Int]
-      grid.cell(row, col).setColor(color)
-      if(checked) { grid.cell(row, col).setColorBack(Color.LIGHT_GRAY)}
+      listColor = color :: listColor
     }
-    grid
+    (height, width, numMines, listValue, listChecked, listFlag, listColor)
   }
 
   override def save(grid:GridInterface): Unit = {
