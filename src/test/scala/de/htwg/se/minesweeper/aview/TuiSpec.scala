@@ -54,7 +54,7 @@ class TuiSpec  extends WordSpec with Matchers{
       tui.processInputLine(input)
       val inputFalse = "4 2 3"
       tui.processInputLine(inputFalse)
-      controller.grid.cell(1,2).getFlag() should be(false)
+      controller.grid.cell(1,2).getFlag() should be(true)
     }
     "solve a MineSweeper on input 's'" in {
       tui.processInputLine("s")
@@ -71,8 +71,7 @@ class TuiSpec  extends WordSpec with Matchers{
 
     }
     "create an empty minesweeper on input '4'" in {
-      tui.processInputLine("4")
-      val input: String = "20 20 20"
+      val input: String = "4\n20 20 20"
       tui.processInputLine(input)
       g.init(20,20,20)
       controller.grid should be(g)
