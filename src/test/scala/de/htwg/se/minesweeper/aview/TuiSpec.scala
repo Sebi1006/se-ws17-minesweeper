@@ -19,8 +19,18 @@ class TuiSpec  extends WordSpec with Matchers{
       g.init(10,10,10)
       controller.grid should be(g)
     }
+    "create an empty minesweeper on input 'new1'" in {
+      tui.processInputLine("new")
+      g.init(10,10,10)
+      controller.grid should be(g)
+    }
     "create an empty minesweeper on input '2'" in {
       tui.processInputLine("2")
+      g.init(16,16,70)
+      controller.grid should be(g)
+    }
+    "create an empty minesweeper on input 'new2'" in {
+      tui.processInputLine("new")
       g.init(16,16,70)
       controller.grid should be(g)
     }
@@ -29,24 +39,49 @@ class TuiSpec  extends WordSpec with Matchers{
       g.init(20,20,150)
       controller.grid should be(g)
     }
+    "create an empty minesweeper on input 'new3'" in {
+      tui.processInputLine("new")
+      g.init(20,20,150)
+      controller.grid should be(g)
+    }
     "set a cell on input '2 2'" in {
-      var input = "2 2"
+      val input = "2 2"
       tui.processInputLine(input)
       controller.grid.cell(1,1).getChecked() should be(true)
     }
     "set flag on input 'f 2 3'" in {
-      var input = "f 2 3"
+      val input = "f 2 3"
       tui.processInputLine(input)
-      controller.grid.cell(1,2).getFlag() should be(true)
-    }
-    "create a new minesweeper on input 'new'" in {
-      tui.processInputLine("new\n")
-      g.init(10, 10, 10)
-      controller.grid should be(g)
+      val inputFalse = "4 2 3"
+      tui.processInputLine(inputFalse)
+      controller.grid.cell(1,2).getFlag() should be(false)
     }
     "solve a MineSweeper on input 's'" in {
       tui.processInputLine("s")
       controller.getChecked(9, 9) should be(true)
+    }
+    "save and load a MineSweeper on input 'save" in {
+      tui.processInputLine("1")
+      val input = "2 2"
+      tui.processInputLine(input)
+      tui.processInputLine("save")
+      tui.processInputLine("1")
+      tui.processInputLine("load")
+      controller.getChecked(1, 1) should be(true)
+
+    }
+    "create an empty minesweeper on input '4'" in {
+      tui.processInputLine("4")
+      val input: String = "20 20 20"
+      tui.processInputLine(input)
+      g.init(20,20,20)
+      controller.grid should be(g)
+    }
+
+    "create an empty minesweeper on input 'new4'" in {
+      tui.processInputLine("new")
+      g.init(20,20,20)
+      controller.grid should be(g)
     }
   }
 

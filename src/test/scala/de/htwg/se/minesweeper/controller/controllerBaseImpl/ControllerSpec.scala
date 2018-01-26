@@ -81,6 +81,8 @@ class ControllerSpec extends WordSpec with Matchers {
             controller.getMine(1, i) should be(true)
             controller.setChecked(1, i, false, false, false)
             controller.getChecked(1, i) should be(true)
+            controller.winner(1, i, true)
+            controller.getStatus() should be(0)
           }
         }
       }

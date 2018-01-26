@@ -226,12 +226,22 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
   resetButton.addActionListener(new ActionListener() {
     def actionPerformed(ae: ActionEvent): Unit = {
       try {
+        if(!startTimeBool) {
+          sw.start()
+          startTimeBool = true
+        }
         sw.stop()
+        startTimeBool = false
         controller.createGrid(savedHeight, savedWidth, savedNumMines)
         setPanel(savedHeight, savedWidth)
       } catch {
         case ex: Exception =>
-		  sw.stop()
+          if(!startTimeBool) {
+            sw.start()
+            startTimeBool = true
+          }
+          sw.stop()
+          startTimeBool = false
           controller.createGrid(savedHeight, savedWidth, savedNumMines)
           setPanel(savedHeight, savedWidth)
       }

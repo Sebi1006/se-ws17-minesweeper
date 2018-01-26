@@ -28,6 +28,7 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   def createGrid(height: Int, width: Int, numMines: Int): Unit = {
     grid = injector.instance[GridFactory].create()
     grid.init(height, width, numMines)
+    status = 0
     noMineCount = (height * width) - numMines
     mineFound = numMines
     flag = true
@@ -44,6 +45,9 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
       grid.cell(i, j).setChecked(checked(width - j - 1 + (height - 1 - i) * width))
       grid.cell(i, j).setFlag(flagList(width - j - 1 + (height - 1 - i) * width))
       grid.cell(i, j).setColor(color(width - j - 1 + (height - 1 - i) * width))
+      if(grid.cell(i, j).getValue() != 0) {
+        flag = false
+      }
 
     }
     for(i <- 0 until height; j <- 0 until width) {
@@ -53,7 +57,6 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
     }
     noMineCount = (height * width) - numMines
     mineFound = numMines
-    flag = false
     undoManager = new UndoManager
     intList = Nil
     publish(new GridSizeChanged(height, width, numMines))
@@ -67,6 +70,9 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
       if (!undo) {
         if (grid.cell(row, col).getChecked) {
           return
+        }
+        if(grid.cell(row, col).getFlag()) {
+          mineFound += 1
         }
         grid.cell(row, col).setChecked(true)
         if (flag) {
@@ -138,16 +144,18 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
   }
 
   def setFlag(row: Int, col: Int, undo: Boolean, command: Boolean): Unit = {
-    if (command) {
-      undoManager.doStep(new SetCommand(row, col, undo, intList, 2, this))
+    if(!grid.cell(row, col).getChecked()) {
+      if (command) {
+        undoManager.doStep(new SetCommand(row, col, undo, intList, 2, this))
+      }
+      grid.cell(row, col).setFlag(!undo)
+      if (undo) {
+        mineFound += 1
+      } else {
+        mineFound -= 1
+      }
+      publish(new CellChanged())
     }
-    grid.cell(row, col).setFlag(!undo)
-    if (undo) {
-      mineFound += 1
-    } else {
-      mineFound -= 1
-    }
-    publish(new CellChanged())
   }
 
   def getFlag(row: Int, col: Int): Boolean = {
@@ -168,7 +176,7 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
       C = colD + grid.getCol(i)
       if (R >= 0 && R < height && C >= 0 && C < width &&
         getColor(R, C) == 'w') {
-        if (getValue(R, C) == 0) {
+        if (getValue(R, C) == 0 && !getChecked(R, C)) {
           depthFirstSearch(R, C)
         } else {
           if(!getChecked(R, C)) {
@@ -208,9 +216,11 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
           }
         }
       } else {
+        status = 0
         noMineCount += 1
       }
       if (noMineCount == 0) {
+        status = 1
         publish(new Winner(true))
       }
     }
@@ -245,5 +255,9 @@ class Controller @AssistedInject() (@Assisted var grid: GridInterface) extends C
 
   def getAll(row: Int, col: Int):(Boolean, Boolean, Int, Int, Int, Int, Color, Boolean) = {
     (getChecked(row, col), getMine(row, col), getValue(row, col), getColor(row,col), height(), width(), getColorBack(row, col), getFlag(row, col))
+  }
+
+  def getStatus() : Int = {
+    status
   }
 }
