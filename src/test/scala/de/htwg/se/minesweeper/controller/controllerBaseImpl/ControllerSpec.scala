@@ -47,5 +47,34 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.grid.cell(9, 9).getChecked() should be(true)
       }
     }
+    "only mines" should {
+      var g = new Grid()
+      g.init(2, 2, 2)
+      val controller = new Controller(g)
+      controller.setChecked(0, 0, false, false, false)
+      "solve" in {
+        for (i <- 0 until 2) {
+          if (controller.getValue(1, i) == -1) {
+            controller.getMine(1, i) should be(true)
+            controller.setChecked(1, i, false, false, false)
+            controller.getChecked(1, i) should be(true)
+          }
+        }
+      }
+    }
+    "big grid" should {
+      var g = new Grid()
+      g.init(30, 30, 30)
+      val controller = new Controller(g)
+      controller.setChecked(0, 0, false, false, false)
+      "dpfs should get" in {
+        for (i <- 0 until 30; j <- 0 until 30) {
+          if (controller.getValue(i, j) == 0) {
+            controller.setChecked(i, j, false, false, false)
+            controller.getChecked(i, j) should be(true)
+          }
+        }
+      }
+    }
   }
 }
