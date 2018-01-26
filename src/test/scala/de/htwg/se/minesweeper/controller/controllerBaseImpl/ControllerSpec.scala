@@ -23,6 +23,29 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.grid.cell(0, 0).getChecked() should be(false)
         controller.redo
         controller.grid.cell(0, 0).getChecked() should be(false)
+        controller.grid.cell(0, 0).setFlag(false)
+        controller.undo
+        controller.grid.cell(0, 0).getFlag() should be(false)
+        controller.redo
+        controller.grid.cell(0, 0).getFlag() should be(true)
+        controller.grid.cell(1, 0).setChecked(true)
+        controller.undo
+        controller.grid.cell(1, 0).getChecked() should be(false)
+        controller.redo
+        controller.grid.cell(1, 0).getChecked() should be(true)
+        var row: Int = 0
+        var col: Int = 0
+        for (i <- 0 until 10; j <- 0 until 10) {
+          if (controller.grid.cell(i, j).getValue() == 0) {
+            controller.setChecked(i, j, false, false, false)
+            row = i
+            col = j
+          }
+        }
+        controller.undo
+        controller.getChecked(row, col) should be(false)
+        controller.redo
+        controller.getChecked(row, col) should be(true)
       }
       "create a grid" in {
         controller.createGrid(15, 15, 15)
