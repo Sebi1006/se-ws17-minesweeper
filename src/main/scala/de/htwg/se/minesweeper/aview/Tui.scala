@@ -19,6 +19,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
   def processInputLine(input: String): Unit = {
     input match {
       case "h" => {
+        println("Type (row) (col) to set a cell")
         println("Type 1 for Beginner")
         println("Type 2 for Intermediate")
         println("Type 3 for Expert")
@@ -125,12 +126,16 @@ class Tui(controller: ControllerInterface) extends Reactor {
           } else if (vec.length == 2) {
             var row = vec(0).toString.toInt
             var col = vec(1).toString.toInt
-            controller.setChecked(row - 1, col - 1, false, true)
+            controller.setChecked(row - 1, col - 1, false, true, false)
           } else {
             if (vec(0).toString.equals("f")) {
               var row = vec(1).toString.toInt
               var col = vec(2).toString.toInt
-              controller.setFlag(row - 1, col - 1, false)
+              if (controller.getFlag(row - 1, col - 1)) {
+                controller.setFlag(row - 1, col - 1, true, true)
+              } else {
+                controller.setFlag(row - 1, col - 1, false, true)
+              }
             } else {
               println("Please use f to set a flag")
             }

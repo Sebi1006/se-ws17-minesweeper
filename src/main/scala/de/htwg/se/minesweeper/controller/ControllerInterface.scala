@@ -13,7 +13,7 @@ trait ControllerInterface extends Publisher {
 
   def createGrid(height: Int, width: Int, numMines: Int): Unit
 
-  def setChecked(row: Int, col: Int, undo: Boolean, command: Boolean): Unit
+  def setChecked(row: Int, col: Int, undo: Boolean, command: Boolean, dpfs: Boolean): Unit
 
   def getChecked(row: Int, col: Int): Boolean
 
@@ -33,7 +33,7 @@ trait ControllerInterface extends Publisher {
 
   def getColorBack(row: Int, col: Int): Color
 
-  def setFlag(row: Int, col: Int, undo: Boolean): Unit
+  def setFlag(row: Int, col: Int, undo: Boolean, command: Boolean): Unit
 
   def getFlag(row: Int, col: Int): Boolean
 

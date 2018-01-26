@@ -16,18 +16,14 @@ class ControllerSpec extends WordSpec with Matchers {
       val smallGrid = g
       val controller = new Controller(smallGrid)
       "handle undo/redo of solving a grid correctly" in {
+        controller.getAll(1, 1) should be((false, false, 0, 'w', 10, 10, null, false))
         controller.grid.cell(0, 0).getChecked() should be(false)
-        //controller.grid.solved should be(false)
         controller.solve
         controller.grid.cell(0, 0).getChecked() should be(true)
-        //controller.grid.solved should be(true)
-        /*controller.undo
+        controller.undo
         controller.grid.cell(0, 0).getChecked() should be(false)
-        //controller.grid.solved should be(false)
         controller.redo
         controller.grid.cell(0, 0).getChecked() should be(true)
-        //controller.grid.solved should be(true)
-        */
       }
     }
   }

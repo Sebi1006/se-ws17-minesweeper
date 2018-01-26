@@ -2,10 +2,30 @@ package de.htwg.se.minesweeper.controller.controllerBaseImpl
 
 import de.htwg.se.minesweeper.util.Command
 
-class SetCommand(row: Int, col: Int, undo: Boolean, controller: Controller) extends Command {
+class SetCommand(row: Int, col: Int, undo: Boolean, group: List[(Int, Int)], typ: Int, controller: Controller) extends Command {
 
-  override def doStep: Unit = controller.setChecked(row, col, undo, false)
-  override def undoStep: Unit = controller.setChecked(row, col, true, false)
-  override def redoStep: Unit = controller.setChecked(row, col, undo, false)
+  override def doStep: Unit = {}
+  override def undoStep: Unit = {
+    if(typ == 1) {
+      controller.setChecked(row, col, true, false, false)
+    } else if(typ == 2) {
+      controller.setFlag(row, col, !undo, false)
+    } else {
+      for (i <- 0 until group.size) {
+        controller.setChecked(group(i)._1, group(i)._2, true, false, true)
+      }
+    }
+  }
+  override def redoStep: Unit = {
+    if(typ == 1) {
+      controller.setChecked(row, col, true, false, false)
+    } else if(typ == 2) {
+      controller.setFlag(row, col, undo, false)
+    } else {
+      for (i <- 0 until group.length) {
+        controller.setChecked(group(i)._1, group(i)._2, !undo, false, true)
+      }
+    }
+  }
 
 }

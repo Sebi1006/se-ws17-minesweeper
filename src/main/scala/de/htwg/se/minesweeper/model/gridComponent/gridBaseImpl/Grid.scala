@@ -9,7 +9,7 @@ case class Grid @AssistedInject() () extends GridInterface {
   var height: Int = 10
   var width: Int = 10
   var numMines: Int = 10
-  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (row, col) => new Cell() }
+  var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (_, _) => new Cell() }
   var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
   var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
 

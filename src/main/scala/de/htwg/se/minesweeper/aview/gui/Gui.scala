@@ -262,9 +262,13 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
         var2 = j
       }
       if (me.getButton == MouseEvent.BUTTON1) {
-        controller.setChecked(var1, var2, false, true)
+        controller.setChecked(var1, var2, false, true, false)
       } else {
-        controller.setFlag(var1, var2, false)
+        if (controller.getFlag(var1, var2)) {
+          controller.setFlag(var1, var2, true, true)
+        } else {
+          controller.setFlag(var1, var2, false, true)
+        }
       }
 
     }
@@ -282,10 +286,10 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
     } else {
       for (k <- 0 until controller.height; l <- 0 until controller.width) {
         if (controller.getMine(k, l)) {
-          blocks(k)(l).setIcon(ic(9))
           blocks(k)(l).removeMouseListener(mh)
         }
       }
+      paint()
       sw.stop()
       resetButton.setIcon(ic(12))
       JOptionPane.showMessageDialog(this, "Game Over!")
@@ -306,14 +310,20 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
     var name: String = null
     var i: Int = 0
     while (i <= 8) {
-      name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
+      //name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
+      name = "C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\" + i + ".png"
       ic(i) = new ImageIcon(name) { i += 1; i - 1 }
     }
-    ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
-    ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
-    ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
-    ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
-    ic(13) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\win.png")
+    //ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
+    //ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
+    //ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
+    //ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
+    //ic(13) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\win.png")
+    ic(9) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\mine.png")
+    ic(10) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\flag.png")
+    ic(11) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\new game.png")
+    ic(12) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\lose.png")
+    ic(13) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\win.png")
   }
 
   def paint(): Unit = {
