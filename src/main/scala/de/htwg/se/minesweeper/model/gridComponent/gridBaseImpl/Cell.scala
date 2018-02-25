@@ -1,7 +1,7 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
-import com.google.inject.assistedinject.{Assisted, AssistedInject}
 import de.htwg.se.minesweeper.model.gridComponent.CellInterface
+import com.google.inject.assistedinject.AssistedInject
 import java.awt.Color
 
 class Cell @AssistedInject() () extends CellInterface {
@@ -23,6 +23,7 @@ class Cell @AssistedInject() () extends CellInterface {
   def getAll(): (Int, Boolean, Int, Color, Boolean) = {
     (getValue(), getChecked(), getColor(), getColorBack(), getFlag())
   }
+
   def setValue(value: Int): Unit = {
     this.value = value
   }

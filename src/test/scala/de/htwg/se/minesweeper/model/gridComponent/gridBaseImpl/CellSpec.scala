@@ -1,10 +1,9 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
-import java.awt.Color
-
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
+import java.awt.Color
 
 @RunWith(classOf[JUnitRunner])
 class CellSpec extends WordSpec with Matchers {

@@ -5,13 +5,12 @@ import java.awt._
 import java.awt.Dimension
 import java.awt.event._
 import javax.swing._
-
 import scala.swing.Frame
 
 class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") with ActionListener with ContainerListener {
 
-  var fwidth: Int = _
-  var fheight: Int = _
+  var fwidth: Int = 10
+  var fheight: Int = 10
   var savedHeight: Int = 10
   var savedWidth: Int = 10
   var savedNumMines: Int = 10
@@ -123,27 +122,27 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
     })
     undo.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        controller.undo
+        controller.undo()
       }
     })
     redo.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        controller.redo
+        controller.redo()
       }
     })
     solve.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        controller.solve
+        controller.solve()
       }
     })
     save.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        controller.save
+        controller.save()
       }
     })
     load.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        controller.load
+        controller.load()
       }
     })
     setJMenuBar(bar)
@@ -205,9 +204,9 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
         BorderFactory.createEmptyBorder(10, 10, 10, 10),
         BorderFactory.createLoweredBevelBorder()))
     panelBlock.setPreferredSize(new Dimension(fwidth, fheight))
-    panelBlock.setLayout(new GridLayout(0, controller.width))
+    panelBlock.setLayout(new GridLayout(0, controller.width()))
     panelBlock.addContainerListener(this)
-    for (i <- 0 until controller.height; j <- 0 until controller.width) {
+    for (i <- 0 until controller.height(); j <- 0 until controller.width()) {
       blocks(i)(j) = new JButton("")
       blocks(i)(j).addMouseListener(mh)
       panelBlock.add(blocks(i)(j))
@@ -224,9 +223,9 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
   }
 
   resetButton.addActionListener(new ActionListener() {
-    def actionPerformed(ae: ActionEvent): Unit = {
+    def actionPerformed(e: ActionEvent): Unit = {
       try {
-        if(!startTimeBool) {
+        if (!startTimeBool) {
           sw.start()
           startTimeBool = true
         }
@@ -236,7 +235,7 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
         setPanel(savedHeight, savedWidth)
       } catch {
         case ex: Exception =>
-          if(!startTimeBool) {
+          if (!startTimeBool) {
             sw.start()
             startTimeBool = true
           }
@@ -254,49 +253,23 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
       startTimeBool = false
       sw.stop()
     }
-    for (i <- 0 until controller.height; j <- 0 until controller.width) {
+    for (i <- 0 until controller.height(); j <- 0 until controller.width()) {
       controller.setColor(i, j, 'w')
     }
   }
 
-  def componentAdded(ce: ContainerEvent): Unit = {}
-  def componentRemoved(ce: ContainerEvent): Unit = {}
-  def actionPerformed(ae: ActionEvent): Unit = {}
-
-  class MouseHandler extends MouseAdapter {
-
-    override def mouseClicked(me: MouseEvent): Unit = {
-      for (i <- 0 until controller.height; j <- 0 until controller.width
-           if me.getSource == blocks(i)(j)) {
-        var1 = i
-        var2 = j
-      }
-      if (me.getButton == MouseEvent.BUTTON1) {
-        controller.setChecked(var1, var2, false, true, false)
-      } else {
-        if (controller.getFlag(var1, var2)) {
-          controller.setFlag(var1, var2, true, true)
-        } else {
-          controller.setFlag(var1, var2, false, true)
-        }
-      }
-
-    }
-
-  }
-
   def winner(win: Boolean): Unit = {
     if (win) {
-      for (k <- 0 until controller.height; l <- 0 until controller.width) {
-        blocks(k)(l).removeMouseListener(mh)
+      for (i <- 0 until controller.height(); j <- 0 until controller.width()) {
+        blocks(i)(j).removeMouseListener(mh)
       }
       sw.stop()
       resetButton.setIcon(ic(13))
       JOptionPane.showMessageDialog(this, "Hurray! You win!")
     } else {
-      for (k <- 0 until controller.height; l <- 0 until controller.width) {
-        if (controller.getMine(k, l)) {
-          blocks(k)(l).removeMouseListener(mh)
+      for (i <- 0 until controller.height(); j <- 0 until controller.width()) {
+        if (controller.getMine(i, j)) {
+          blocks(i)(j).removeMouseListener(mh)
         }
       }
       paint()
@@ -320,20 +293,14 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
     var name: String = null
     var i: Int = 0
     while (i <= 8) {
-      name = "Z:\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
-      //name = "C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\" + i + ".png"
+      name = "C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\" + i + ".png"
       ic(i) = new ImageIcon(name) { i += 1; i - 1 }
     }
-    ic(9) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
-    ic(10) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
-    ic(11) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
-    ic(12) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
-    ic(13) = new ImageIcon("Z:\\se-ws17-minesweeper\\src\\main\\resources\\win.png")
-    //ic(9) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\mine.png")
-    //ic(10) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\flag.png")
-    //ic(11) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\new game.png")
-    //ic(12) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\lose.png")
-    //ic(13) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper-master\\src\\main\\resources\\win.png")
+    ic(9) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\mine.png")
+    ic(10) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\flag.png")
+    ic(11) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\new game.png")
+    ic(12) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\lose.png")
+    ic(13) = new ImageIcon("C:\\Users\\Sebi\\IdeaProjects\\se-ws17-minesweeper\\src\\main\\resources\\win.png")
   }
 
   def paint(): Unit = {
@@ -354,6 +321,31 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
         blocks(i)(j).setBackground(null)
       }
     }
+  }
+
+  def componentAdded(ce: ContainerEvent): Unit = {}
+  def componentRemoved(ce: ContainerEvent): Unit = {}
+  def actionPerformed(ae: ActionEvent): Unit = {}
+
+  class MouseHandler extends MouseAdapter {
+
+    override def mouseClicked(me: MouseEvent): Unit = {
+      for (i <- 0 until controller.height(); j <- 0 until controller.width()
+           if me.getSource == blocks(i)(j)) {
+        var1 = i
+        var2 = j
+      }
+      if (me.getButton == MouseEvent.BUTTON1) {
+        controller.setChecked(var1, var2, false, true, false)
+      } else {
+        if (controller.getFlag(var1, var2)) {
+          controller.setFlag(var1, var2, true, true)
+        } else {
+          controller.setFlag(var1, var2, false, true)
+        }
+      }
+    }
+
   }
 
   class StopWatch extends JFrame with Runnable {
@@ -410,7 +402,7 @@ class Gui(controller: ControllerInterface) extends JFrame("HTWG Minesweeper") wi
 
   }
 
-  class Custom() extends JFrame("Custom Field") with ActionListener {
+  class Custom extends JFrame("Custom Field") with ActionListener {
 
     var tf1: JTextField = new JTextField()
     var tf2: JTextField = new JTextField()

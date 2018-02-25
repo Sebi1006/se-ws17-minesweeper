@@ -1,7 +1,7 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
-import com.google.inject.assistedinject.{Assisted, AssistedInject}
 import de.htwg.se.minesweeper.model.gridComponent.{CellInterface, GridInterface}
+import com.google.inject.assistedinject.AssistedInject
 import scala.util.Random
 
 case class Grid @AssistedInject() () extends GridInterface {
@@ -12,7 +12,6 @@ case class Grid @AssistedInject() () extends GridInterface {
   var matrix: Vector[Vector[Cell]] = Vector.tabulate(height, width) { (_, _) => new Cell() }
   var row: Array[Int] = Array(-1, -1, -1, 0, 1, 1, 1, 0)
   var col: Array[Int] = Array(-1, 0, 1, 1, 1, 0, -1, -1)
-
 
   def init(height: Int, width: Int, numMines: Int): Unit = {
     this.height = height
@@ -53,7 +52,7 @@ case class Grid @AssistedInject() () extends GridInterface {
       rowC = i
       colC = j
       if (cell(rowC, colC).getValue() != -1) {
-        for (k <- 0.until(8)) {
+        for (k <- 0 until 8) {
           R = rowC + row(k)
           C = colC + col(k)
           if (R >= 0 && C >= 0 && R < height && C < width) {
@@ -87,6 +86,11 @@ case class Grid @AssistedInject() () extends GridInterface {
     numMines
   }
 
+  def solve(): List[(Int, Int)] = {
+    val s = new Solver(this)
+    s.solve()
+  }
+
   override def toString: String = {
     val lineseparator = ("+-" + ("--" * width)) + "+\n"
     val line = ("| " + ("y " * width)) + "|\n"
@@ -102,18 +106,13 @@ case class Grid @AssistedInject() () extends GridInterface {
           box = box.replaceFirst("y", "f")
         }
     } else {
-      if (cell(row,col).getValue() == -1) {
+      if (cell(row, col).getValue() == -1) {
         box = box.replaceFirst("y", "b")
       } else {
         box = box.replaceFirst("y", cell(row, col).getValue().toString)
       }
     }
     box
-  }
-
-  def solve: List[(Int, Int)] = {
-    val s = new Solver(this)
-    s.solve()
   }
 
 }

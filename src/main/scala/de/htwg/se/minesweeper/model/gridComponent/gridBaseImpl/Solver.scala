@@ -1,8 +1,7 @@
 package de.htwg.se.minesweeper.model.gridComponent.gridBaseImpl
 
-import java.awt.Color
-
 import de.htwg.se.minesweeper.model.gridComponent.GridInterface
+import java.awt.Color
 
 class Solver(grid: GridInterface) {
 
@@ -10,7 +9,7 @@ class Solver(grid: GridInterface) {
 
   def solve(): List[(Int, Int)] = {
     for (i <- 0 until grid.getHeight(); j <- 0 until grid.getWidth()) {
-      if (grid.cell(i, j).getChecked() == false) {
+      if (!grid.cell(i, j).getChecked()) {
         intList = (i, j) :: intList
       }
       grid.cell(i, j).setChecked(true)

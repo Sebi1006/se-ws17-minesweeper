@@ -1,14 +1,13 @@
 package de.htwg.se.minesweeper.aview
 
 import de.htwg.se.minesweeper.controller.{CellChanged, ControllerInterface, GridSizeChanged, Winner}
-
 import scala.swing.Reactor
 import scala.io.StdIn.readLine
 
 class Tui(controller: ControllerInterface) extends Reactor {
 
   listenTo(controller)
-  println("Type h for Help")
+  println("Type h for help")
   var lastgame: Int = 1
   var status: Int = 0
   var noMineNumber: Int = 0
@@ -19,17 +18,17 @@ class Tui(controller: ControllerInterface) extends Reactor {
   def processInputLine(input: String): Unit = {
     input match {
       case "h" => {
-        println("Type (row) (col) to set a cell")
-        println("Type 1 for Beginner")
-        println("Type 2 for Intermediate")
-        println("Type 3 for Expert")
-        println("Type 4 for Custom")
-        println("Type f to set a flag")
-        println("Type s to solve")
-        println("Type save to save")
-        println("Type load to load")
-        println("Type exit for Exit")
-        println("Type new for New Game")
+        println("Type new to start a new game")
+        println("Type exit to quit the game")
+        println("Type 1 for beginner grid")
+        println("Type 2 for advanced grid")
+        println("Type 3 for expert grid")
+        println("Type 4 to set a custom grid with parameters in the next line (height) (width) (mines)")
+        println("Type (row) (column) to set a cell")
+        println("Type f (row) (column) to set a flag")
+        println("Type s to solve the current game")
+        println("Type save to save the current grid")
+        println("Type load to load the last saved grid")
       }
       case "1" => {
         createGrid(10, 10, 10)
