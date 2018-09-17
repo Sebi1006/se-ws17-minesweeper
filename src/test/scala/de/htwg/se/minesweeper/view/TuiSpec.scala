@@ -22,7 +22,7 @@ class TuiSpec extends WordSpec with Matchers {
       controller.grid should be(grid)
     }
 
-    "create an empty minesweeper on input 'new'" in {
+    "create an empty minesweeper on input 'new' for the first time" in {
       tui.processInputLine("new")
       grid.init(10, 10, 10)
       controller.grid should be(grid)
@@ -34,7 +34,7 @@ class TuiSpec extends WordSpec with Matchers {
       controller.grid should be(grid)
     }
 
-    "create an empty minesweeper on input 'new'" in {
+    "create an empty minesweeper on input 'new' for the second time" in {
       tui.processInputLine("new")
       grid.init(16, 16, 70)
       controller.grid should be(grid)
@@ -46,7 +46,7 @@ class TuiSpec extends WordSpec with Matchers {
       controller.grid should be(grid)
     }
 
-    "create an empty minesweeper on input 'new'" in {
+    "create an empty minesweeper on input 'new' for the third time" in {
       tui.processInputLine("new")
       grid.init(20, 20, 150)
       controller.grid should be(grid)
@@ -89,7 +89,7 @@ class TuiSpec extends WordSpec with Matchers {
       controller.grid should be(grid)
     }
 
-    "create an empty minesweeper on input 'new'" in {
+    "create an empty minesweeper on input 'new' for the fourth time" in {
       tui.processInputLine("new")
       grid.init(20, 20, 20)
       controller.grid should be(grid)
