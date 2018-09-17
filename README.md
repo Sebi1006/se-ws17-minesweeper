@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Sebi1006/se-ws17-minesweeper.svg?branch=master)](https://travis-ci.org/Sebi1006/se-ws17-minesweeper) - [![Coverage Status](https://coveralls.io/repos/github/Sebi1006/se-ws17-minesweeper/badge.svg?branch=master)](https://coveralls.io/github/Sebi1006/se-ws17-minesweeper?branch=master) - Master
 
 
-# HTWG Minesweeper in Scala 
+# HTWG Minesweeper in Scala
 
 This is an implementation of Minesweeper in Scala for the class
 Software Engineering at the University of Applied Sciences HTWG Konstanz.
