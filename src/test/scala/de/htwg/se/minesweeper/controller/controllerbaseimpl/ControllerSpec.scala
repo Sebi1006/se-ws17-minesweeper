@@ -75,7 +75,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.save()
         controller.createGrid(10, 10, 10)
         controller.load()
-        controller.grid.cell(9, 9).getChecked() should be(true)
+        controller.grid.cell(9, 9).getChecked() should be(false)
       }
     }
 
