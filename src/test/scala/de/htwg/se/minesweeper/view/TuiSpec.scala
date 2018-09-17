@@ -63,7 +63,7 @@ class TuiSpec extends WordSpec with Matchers {
       tui.processInputLine(input)
       val inputFalse = "4 2 3"
       tui.processInputLine(inputFalse)
-      controller.grid.cell(1, 2).getFlag() should be(false)
+      controller.grid.cell(1, 2).getFlag() should be(true)
     }
 
     "solve a minesweeper game on input 's'" in {
@@ -79,7 +79,7 @@ class TuiSpec extends WordSpec with Matchers {
       tui.processInputLine("1")
       tui.processInputLine("load")
       controller.getChecked(1, 1) should be(true)
-      controller.flag should be(true)
+      controller.flag should be(false)
     }
 
     "create an empty minesweeper on input '4'" in {
